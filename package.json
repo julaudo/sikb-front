@@ -1,0 +1,41 @@
+{
+  "name": "sikb-front",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "lint fix": "vue-cli-service lint fix",
+    "swagger": "openapi-generator generate -i swagger.yaml -t templates -c swagger-config.json -g typescript-axios -o src/generated --skip-validate-spec"
+  },
+  "dependencies": {
+    "@types/nprogress": "0.0.29",
+    "axios": "^0.18.0",
+    "nprogress": "^0.2.0",
+    "vue": "^2.6.6",
+    "vue-axios": "^2.1.4",
+    "vue-class-component": "^6.0.0",
+    "vue-i18n": "^8.0.0",
+    "vue-property-decorator": "^7.0.0",
+    "vue-router": "^3.0.1",
+    "vuetify": "^1.5.5",
+    "vuex": "^3.0.1",
+    "vuex-class": "^0.3.2",
+    "vuex-persistedstate": "^2.5.4"
+  },
+  "devDependencies": {
+    "@types/webpack": "^4.4.0",
+    "@vue/cli-plugin-babel": "^3.5.0",
+    "@vue/cli-plugin-typescript": "^3.5.0",
+    "@vue/cli-service": "^3.5.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.1",
+    "typescript": "^3.2.1",
+    "vue-cli-plugin-i18n": "^0.5.2",
+    "vue-cli-plugin-vuetify": "^0.5.0",
+    "vue-template-compiler": "^2.5.21",
+    "vuetify-loader": "^1.0.5",
+    "webpack-bundle-analyzer": "^3.1.0"
+  }
+}
