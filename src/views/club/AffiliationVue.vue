@@ -122,7 +122,9 @@ import BoardVue from '@/views/club/BoardVue.vue';
 import EntityForm from '@/views/generic/EntityForm';
 import {mixins} from 'vue-class-component';
 import {Affiliation, AffiliationsApi} from '@/generated';
-import {baseOptions} from '@/main';
+import {baseOptions} from '@/utils/options';
+
+
 @Component({
     components: {BoardVue},
 })

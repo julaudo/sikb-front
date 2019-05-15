@@ -1,6 +1,6 @@
 <template fill-height>
 
-    <div class="kb-datatable" style="height:100%;width:100%;">
+    <div style="height:100%;width:100%;">
         <v-card style="height:100%" >
             <v-card-title ref="title">
                 <span class="headline">Affiliations</span>
@@ -114,12 +114,12 @@ import Utils from '@/utils/utils';
 import Validators from '@/utils/validators';
 import AffiliationVue from '@/views/club/AffiliationVue.vue';
 import {Getter} from 'vuex-class';
-import {baseOptions} from '@/main';
+import {baseOptions} from '@/utils/options';
 import {AxiosResponse} from 'axios';
 import store from '@/store/store';
 import {Route} from 'vue-router';
 import {SeasonWithAffiliation} from '@/generated/api';
-import {Vue} from 'vue/types/vue';
+import Vue from 'vue';
 
 @Component({
     components: {

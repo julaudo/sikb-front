@@ -20,5 +20,8 @@ module.exports = {
         maxSize: 200000,
       }
     },
+    resolve: {
+      modules: ['node_modules', 'src/resources']
+    }
   },
 }

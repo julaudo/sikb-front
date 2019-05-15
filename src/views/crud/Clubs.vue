@@ -15,7 +15,7 @@
 <script lang="ts">
 import Component from 'vue-class-component';
 import {Club, ClubsApi} from '@/generated';
-import {baseOptions} from '@/main';
+import {baseOptions} from '@/utils/options';
 import {AxiosPromise} from 'axios';
 import CrudParent from '@/views/crud/CrudParent.vue';
 import {Mixins} from 'vue-property-decorator';

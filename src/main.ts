@@ -1,3 +1,4 @@
+import './class-component-hooks';
 import Vue from 'vue';
 import './plugins/vuetify';
 import App from './App.vue';
@@ -12,13 +13,6 @@ Vue.config.productionTip = false;
 Vue.use(Vuetify, {
   iconfont: 'md',
 });
-
-// TODO remove hardcoded data
-export const baseOptions = {
-  username: 'admin',
-  password: 'admin',
-};
-
 
 new Vue({
   router,

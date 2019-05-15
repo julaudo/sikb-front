@@ -13,7 +13,7 @@ import Validators from '@/utils/validators';
 import {Sex} from '@/generated';
 
 @Component
-export default class AffiliationVue extends Mixins(Utils, Validators) {
+export default class SexVue extends Mixins(Utils, Validators) {
     @Prop() public value!: Sex;
 
     private MALE = Sex.MALE;

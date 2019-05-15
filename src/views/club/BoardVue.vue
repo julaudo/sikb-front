@@ -38,6 +38,7 @@
                 <SexVue v-model="board.treasurer.sex" />
             </v-flex>
 
+            {{board.electedDate}}
             <v-flex xs12 sm12 md12>
                 <DateEditor
                         v-model="board.electedDate"

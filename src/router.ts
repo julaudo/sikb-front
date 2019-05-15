@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router, {RouteConfig} from 'vue-router';
-import Login from '@/views/Login.vue';
 import SimpleView from '@/views/layout/SimpleView.vue';
 import {Features} from '@/model/model';
 
@@ -111,7 +110,7 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: () => import( './views/Login.vue'),
     },
     {
       path: '/',

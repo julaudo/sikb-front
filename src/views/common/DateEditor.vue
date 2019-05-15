@@ -1,4 +1,5 @@
 <template>
+    <div>
     <v-menu
             v-model="menu"
             :close-on-content-click="false"
@@ -6,21 +7,24 @@
             lazy
             transition="scale-transition"
             offset-y
+            :position-x="x"
+            :position-y="y"
             full-width
             min-width="290px">
-        <v-text-field
-                @focus="focus()"
-                @blur="blur()"
-                slot="activator"
-                v-model="dateFormatted"
-                :label="label"
-                prepend-icon="event">
-        </v-text-field>
         <v-date-picker
                 v-model="date"
                 :rules="[required()]"
                 @input="menu = false"></v-date-picker>
     </v-menu>
+
+    <v-text-field
+            @blur="blur()"
+            v-model="dateFormatted"
+            @click:prepend="click"
+            :label="label"
+            prepend-icon="event">
+    </v-text-field>
+    </div>
 </template>
 
 <script lang="ts">
@@ -34,38 +38,40 @@ export default class DateEditor extends Mixins(Utils, Validators) {
     @Prop() public label!: string;
 
     private menu = false;
-    private focused = false;
     private dateFormatted = '';
+    private x = 0;
+    private y = 0;
 
     @Watch('date', { immediate: true, deep: true })
     private watchDate(date: string) {
         this.dateFormatted = this.formatDate(this.date);
     }
 
-    get date() {
+    private click(e: MouseEvent) {
+        this.menu = true;
+        this.x = e.clientX;
+        this.y = e.clientY;
+    }
+
+    public get date() {
         return this.value;
     }
 
-    set date(date: string) {
+    public set date(date: string) {
         this.$emit('input', date);
         this.dateFormatted = this.formatDate(date);
     }
 
-    private focus() {
-        this.focused = true;
-    }
-
     private blur() {
-        this.focused = false;
-        if (this.isValidDate(this.dateFormatted)) {
+        if (this.dateFormatted === '') {
+            this.date = '';
+        } else if (this.isValidDate(this.dateFormatted)) {
             const parsedDate = this.parseDate(this.dateFormatted);
             if (parsedDate != this.date) { /* tslint:disable-line:triple-equals */
                 this.date = parsedDate;
             }
         } else {
-            this.$nextTick(() => {
-                this.dateFormatted = this.formatDate(this.value);
-            });
+            this.dateFormatted = this.formatDate(this.value);
         }
     }
 
@@ -85,10 +91,6 @@ export default class DateEditor extends Mixins(Utils, Validators) {
     }
 
     private parseDate(date: string) {
-        if (!date) {
-            return '';
-        }
-
         const [day, month, year] = date.split('/');
         return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     }

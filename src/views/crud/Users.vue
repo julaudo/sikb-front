@@ -16,7 +16,7 @@
 import Component from 'vue-class-component';
 import {User, UsersApi} from '@/generated';
 import {AxiosPromise} from 'axios';
-import {baseOptions} from '@/main';
+import {baseOptions} from '@/utils/options';
 import {Mixins} from 'vue-property-decorator';
 import CrudParent from '@/views/crud/CrudParent.vue';
 import FieldType from '@/views/common/FieldType';

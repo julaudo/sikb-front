@@ -1,11 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import {Club, ClubsApi, ConfigurationsApi, Credentials, IdentificationsApi, Season, Session} from '../generated';
-import {baseOptions} from '../main';
 import {AxiosPromise, AxiosResponse} from 'axios';
 import {UserInfo} from '@/store/UserInfo';
 import createPersistedState from 'vuex-persistedstate';
 import {Features} from '@/model/model';
+import {baseOptions} from '@/utils/options';
 
 Vue.use(Vuex);
 

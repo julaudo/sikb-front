@@ -16,7 +16,7 @@
 import Component from 'vue-class-component';
 import {Person, PersonsApi} from '@/generated';
 import {AxiosPromise} from 'axios';
-import {baseOptions} from '@/main';
+import {baseOptions} from '@/utils/options';
 import {Mixins} from 'vue-property-decorator';
 import CrudParent from '@/views/crud/CrudParent.vue';
 import FieldType from '@/views/common/FieldType';
@@ -25,7 +25,7 @@ import Crud from '@/views/common/Crud.vue';
 @Component({
     components: {Crud},
 })
-export default class Persons extends Mixins(CrudParent, FieldType) {
+export default class Affiliations extends Mixins(CrudParent, FieldType) {
 
     public created() {
         this.headers = [

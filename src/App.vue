@@ -62,10 +62,6 @@ import {Route} from 'vue-router';
 import {Features} from '@/model/model';
 import store from '@/store/store';
 
-Component.registerHooks([
-  'beforeRouteEnter',
-  'beforeRouteUpdate',
-]);
 
 @Component
 export default class App extends Vue {

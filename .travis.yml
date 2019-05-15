@@ -1,6 +1,9 @@
 language: node_js
 node_js: stable
-script: npm run build
+script:
+  - npm run build
+  - npm run test:unit
+  - npm run coveralls
 deploy:
   - provider: script
     skip_cleanup: true

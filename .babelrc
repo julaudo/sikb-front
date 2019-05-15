@@ -1,0 +1,9 @@
+{
+  "presets": [
+    "@babel/typescript"
+  ],
+  "plugins": ["macros",
+    "dynamic-import-node",
+    "@babel/proposal-class-properties",
+    "@babel/proposal-object-rest-spread"]
+}

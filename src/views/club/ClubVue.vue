@@ -73,7 +73,7 @@
 import {Club, ClubsApi} from '@/generated';
 import {Getter} from 'vuex-class';
 import {Component, Mixins} from 'vue-property-decorator';
-import {baseOptions} from '@/main';
+import {baseOptions} from '@/utils/options';
 import Utils from '@/utils/utils';
 import Validators from '@/utils/validators';
 import {AxiosPromise} from 'axios';
