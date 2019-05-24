@@ -16,7 +16,7 @@
 import { Configuration } from "./configuration";
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-export const BASE_PATH = "https://cors-anywhere.herokuapp.com/http://ec2-35-180-42-251.eu-west-3.compute.amazonaws.com:8080/sikb/api/v1".replace(/\/+$/, "");
+export const BASE_PATH = "https://sikb-api.eu-west-3.elasticbeanstalk.com/api/v1".replace(/\/+$/, "");
 
 /**
  *

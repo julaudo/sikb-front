@@ -80,9 +80,7 @@ const store = new Vuex.Store({
             userInfo.features.push(Features.ADMIN);
           } else {
             userInfo.features.push(Features.CLUB_ADMIN);
-            clubsIds.push(12);
-            clubsIds.push(13);
-            clubsIds.push(14);
+            clubsIds.push(1);
           }
 
           clubsIds.forEach((id) => {

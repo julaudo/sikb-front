@@ -81,7 +81,7 @@
                 <tr @click="editItem(props.item)">
                     <td v-for="header in propertyHeaders" class="text-xs-left kb-datatable-row">
                         <template v-if="header.type === TYPE_IMAGE && resolveProperty(header.value, props.item)">
-                            <v-img :src="'https://cors-anywhere.herokuapp.com/' + resolveProperty(header.value, props.item)"/>
+                            <v-img :src="resolveProperty(header.value, props.item)"/>
                         </template>
                         <template v-if="header.type === TYPE_DATE && resolveProperty(header.value, props.item)">
                             {{resolveProperty(header.value, props.item)}}

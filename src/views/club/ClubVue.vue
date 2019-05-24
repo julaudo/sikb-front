@@ -34,6 +34,7 @@
 
                             <div style="overflow: hidden; padding-right: 0.5em;">
                                 <v-text-field
+                                        v-if="club.logo"
                                         v-model="club.logo.location"
                                         :label="$t('clubs.field.logo.location')"
                                         readonly
@@ -112,7 +113,7 @@ export default class ClubVue extends Mixins(Utils, Validators) {
             const api = new ClubsApi(baseOptions);
 
             if (!this.equals(this.club.logo, this.clubBackup.logo)) {
-                const logoPromise = api.uploadLogo(this.userToken, 12, this.file);
+                const logoPromise = api.uploadLogo(this.userToken, this.club.id, this.file);
                 promises.push(logoPromise);
                 logoPromise.then((r) => this.club!.logo = {
                     location: r.data.location,
