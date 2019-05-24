@@ -15,8 +15,8 @@ describe('ClubAffiliations.vue', () => {
     let wrapper: any;
 
     const currentSeason: Season = {id: '20172018', begin: '2017', end: '2018', description: '2017/2018'};
-    const utilsTest = Vue.extend({
-        template: `<div data-app="true"><router-view /></div>`,
+    const routerView = Vue.extend({
+        template: `<router-view />`,
     });
 
 
@@ -70,7 +70,10 @@ describe('ClubAffiliations.vue', () => {
             features: [],
         };
 
-        wrapper = mount(utilsTest, {
+        wrapper = mount(routerView, {
+            stubs: {
+                'v-menu': true
+            },
             sync: true,
             i18n,
             router,
@@ -136,9 +139,9 @@ describe('ClubAffiliations.vue', () => {
 
         router.push('/club/12/affiliations', () => {
             nextTick(() => {
-                const vm = wrapper.vm.$children[0];
-
+                const vm = wrapper.find(ClubAffiliations).vm;
                 expect(vm.affiliations.length).toEqual(2);
+                expect(vm.active).toEqual('20172018');
                 done();
             });
         });
