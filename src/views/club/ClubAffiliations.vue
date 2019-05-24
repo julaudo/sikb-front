@@ -11,7 +11,7 @@
                     <span v-if="noAffiliationForCurrentSeason()" class="subheading">{{$t('affiliation.noAffiliationCurrentSeason', [currentSeason.description])}}</span>
                     <v-layout layout align-center justify-center row fill-height>
                         <v-btn v-if="affiliations.length === 0"
-                                @click="affiliate()"
+                                @click="affiliateForSeasonAndSetRouteFromExisting(currentSeason)"
                                 color="primary"
                         >
                             {{$t('affiliation.affiliate', [currentSeason.description])}}
@@ -30,7 +30,7 @@
                                 <v-list-tile
                                         v-for="(item, i) in reaffiliateItems"
                                         :key="i"
-                                        @click="affiliateForSeasonAndSetRouteFromExisting(item)"
+                                        @click="affiliateForSeasonAndSetRouteFromExisting(currentSeason, item)"
                                 >
                                     <v-list-tile-title>{{ getReaffiliateDescription(item) }}</v-list-tile-title>
                                 </v-list-tile>
@@ -50,7 +50,7 @@
                                 <v-list-tile
                                         v-for="(item, i) in availableSeasons"
                                         :key="i"
-                                        @click="affiliateForSeasonAndSetRoute(item)"
+                                        @click="affiliateForSeasonAndSetRouteFromExisting(item)"
                                 >
                                     <v-list-tile-title>{{ item.description }}</v-list-tile-title>
                                 </v-list-tile>
@@ -89,7 +89,6 @@
                                 :entity="a.affiliation"
                                 :clubId="clubId"
                                 :seasonId="seasonId"
-                                @deleteAffiliation="deleteAffiliation"
                                 @cancel="cancelAffiliation"/>
                     </v-card>
                 </v-tab-item>
@@ -177,7 +176,7 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
         if (to.params.seasonId && this.affiliations.filter((a) => a.season.id === to.params.seasonId).length === 0) {
             const season = store.getters.seasons.get(to.params.seasonId);
             if (season) {
-                this.affiliateForSeason(season);
+                this.affiliateForSeasonAndSetRouteFromExisting(season);
             }
         } else if (affiliations.length > 0) {
             if (to.params.seasonId) {
@@ -241,7 +240,7 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
             if (this.affiliations.filter((a) => a.season.id === to.params.seasonId).length === 0) {
                 const season = store.getters.seasons.get(to.params.seasonId);
                 if (season) {
-                    this.affiliateForSeason(season);
+                    this.affiliateForSeasonAndSetRouteFromExisting(season);
                 }
             }
             next();
@@ -250,81 +249,57 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
             next();
 
             this.$router.replace({name: 'affiliation', params: {seasonId: this.firstAffiliation.season.id }});
-        }
-
-    }
-
-    private affiliate() {
-        this.affiliateForSeasonAndSetRoute(this.currentSeason);
-    }
-
-    private affiliateForSeasonAndSetRoute(season: Season) {
-        this.affiliateForSeason(season);
-        this.$router.push({name: 'affiliation', params: {seasonId: season.id }});
-
-    }
-
-    private affiliateForSeasonAndSetRouteFromExisting(affiliationSeason: SeasonWithAffiliation) {
-        if (affiliationSeason) {
-            const affiliation = {
-                season: this.currentSeason,
-                affiliation: this.copy(affiliationSeason.affiliation),
-            };
-            affiliation.affiliation.id = 0;
-            affiliation.affiliation.board.electedDate = '';
-            this.affiliateForSeasonFromExisting(this.currentSeason, affiliation);
         } else {
-            this.affiliateForSeason(this.currentSeason);
+            this.active = null;
+            next();
         }
-        this.$router.push({name: 'affiliation', params: {seasonId: this.currentSeason.id }});
 
     }
 
-    private affiliateForSeason(season: Season) {
-        const board: Board = {
-            electedDate: '',
-            membersNumber: 0,
-            president: {name: '', sex: Sex.MALE},
-            secretary: {name: '', sex: Sex.MALE},
-            treasurer: {name: '', sex: Sex.MALE},
-
-        };
-
-        const affiliation: Affiliation = {
-            address: '',
-            board,
-            city: '',
-            email: '',
-            phoneNumber: '',
-            postalCode: '',
-            prefectureCity: '',
-            prefectureNumber: '',
-            siretNumber: '',
-            webSite: '',
-            id: 0,
-
-        };
-
-        const affiliationSeason: SeasonWithAffiliation = {
+    private affiliateForSeasonAndSetRouteFromExisting(season: Season, affiliationSeason: SeasonWithAffiliation | null = null) {
+        if (!affiliationSeason) {
+            affiliationSeason = {
+                season,
+                affiliation: {
+                    address: '',
+                    board: {
+                        electedDate: '',
+                        membersNumber: 0,
+                        president: {name: '', sex: Sex.MALE},
+                        secretary: {name: '', sex: Sex.MALE},
+                        treasurer: {name: '', sex: Sex.MALE},
+                    },
+                    city: '',
+                    email: '',
+                    phoneNumber: '',
+                    postalCode: '',
+                    prefectureCity: '',
+                    prefectureNumber: '',
+                    siretNumber: '',
+                    webSite: '',
+                    id: 0,
+                },
+            };
+        }
+        const affiliation = {
             season,
-            affiliation,
+            affiliation: this.copy(affiliationSeason.affiliation),
         };
-
-        this.affiliateForSeasonFromExisting(season, affiliationSeason);
-    }
-    private affiliateForSeasonFromExisting(season: Season, affiliationSeason: SeasonWithAffiliation) {
-        this.affiliations.push(affiliationSeason);
+        affiliation.affiliation.id = 0;
+        affiliation.affiliation.board.electedDate = '';
         this.active = '' + affiliationSeason.season.id;
-        this.resize();
-    }
 
-    private deleteAffiliation(seasonId: string) {
-        this.cancelAffiliation(seasonId);
+        this.affiliations.push(affiliationSeason);
+        this.resize();
+
+        this.$router.push({name: 'affiliation', params: {seasonId: season.id }});
     }
 
     private cancelAffiliation(seasonId: string) {
         this.affiliations = this.affiliations.filter((a) => a.season.id !== seasonId);
-        this.$router.replace({name: 'affiliations', replace: true});
+
+        this.$router.replace({
+            name: 'affiliations'});
         this.resize();
     }
 

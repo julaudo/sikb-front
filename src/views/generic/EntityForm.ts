@@ -12,6 +12,7 @@ export default class EntityForm<T> extends Mixins(Utils) {
     protected valid = null;
     protected entityBackup!: T;
     protected saving = false;
+    protected deleting = false;
 
     public mounted() {
         this.entityBackup = this.copy(this.entity);

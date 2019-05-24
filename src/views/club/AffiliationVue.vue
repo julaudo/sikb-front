@@ -84,7 +84,7 @@
             <v-card-actions  style="flex-shrink: 0;">
                 <v-spacer></v-spacer>
 
-                <v-btn
+                <v-btn id="btnAffiliationCancel"
                         :disabled="cancelDisabled() && !isCreation()"
                         flat color="blue darken-1"
                         @click="cancel"
@@ -92,7 +92,7 @@
                     {{$t("cancel")}}
                 </v-btn>
 
-                <v-btn
+                <v-btn id="btnAffiliationValidate"
                         :loading="saving"
                         :disabled="validateDisabled()"
                         flat color="blue darken-1"
@@ -101,9 +101,9 @@
                     {{$t("validate")}}
                 </v-btn>
 
-                <v-btn
+                <v-btn id="btnAffiliationDelete"
                         :disabled="isCreation()"
-                        :loading="saving"
+                        :loading="deleting"
                         flat color="blue darken-1"
                         @click="deleteAffiliation()"
                 >
@@ -145,15 +145,27 @@ export default class AffiliationVue extends Mixins(Utils, Validators, mixins<Ent
     }
 
     protected deleteAffiliation() {
-        new AffiliationsApi(baseOptions).deleteAffiliation(this.userToken, this.clubId, this.seasonId).then(
-            () => {
-                this.$emit('deleteAffiliation', this.seasonId);
-            },
-        );
+        this.deleting = true;
+        new AffiliationsApi(baseOptions).deleteAffiliation(this.userToken, this.clubId, this.seasonId)
+            .then(() => {
+                this.deleting = false;
+                this.$emit('cancel', this.seasonId);
+            })
+            .catch(() => {
+                this.deleting = false;
+            });
     }
 
     private validate() {
-        new AffiliationsApi(baseOptions).createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity);
+        this.saving = true;
+        new AffiliationsApi(baseOptions)
+            .createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity)
+            .then(() => {
+                this.saving = false;
+            })
+            .catch(() => {
+                this.saving = false;
+            });
     }
 }
 </script>
