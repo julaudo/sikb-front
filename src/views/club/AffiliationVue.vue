@@ -158,14 +158,25 @@ export default class AffiliationVue extends Mixins(Utils, Validators, mixins<Ent
 
     private validate() {
         this.saving = true;
-        new AffiliationsApi(baseOptions)
-            .createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity)
-            .then(() => {
-                this.saving = false;
-            })
-            .catch(() => {
-                this.saving = false;
-            });
+        if (this.entity.id) {
+            new AffiliationsApi(baseOptions)
+                .updateAffiliation(this.userToken, this.clubId, this.seasonId, this.entity)
+                .then(() => {
+                    this.saving = false;
+                })
+                .catch(() => {
+                    this.saving = false;
+                });
+        } else {
+            new AffiliationsApi(baseOptions)
+                .createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity)
+                .then(() => {
+                    this.saving = false;
+                })
+                .catch(() => {
+                    this.saving = false;
+                });
+        }
     }
 }
 </script>

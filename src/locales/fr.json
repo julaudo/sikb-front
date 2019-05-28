@@ -57,6 +57,8 @@
   "users.listTitle": "Liste des utilisateurs",
   "users.noneFound": "Aucun utilisateur trouvé",
   "users.field.email": "Email",
+  "users.field.profile.type": "Profil",
+  "users.field.profile.clubIds": "Clubs",
   "field.edit": "Modifier",
   "field.delete": "Supprimer",
   "affiliation.prefectureNumber" : "Numéro de dossier (préfecture)",

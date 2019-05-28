@@ -35,7 +35,7 @@
                             <div style="overflow: hidden; padding-right: 0.5em;">
                                 <v-text-field
                                         v-if="club.logo"
-                                        v-model="club.logo.location"
+                                            v-model="club.logo.location"
                                         :label="$t('clubs.field.logo.location')"
                                         readonly
                                         disabled

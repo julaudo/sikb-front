@@ -8,6 +8,31 @@ export default class Utils extends Vue {
         return path.split('.').reduce((prev, curr) => prev ? prev[curr] : null, obj || self);
     }
 
+    public setProperty(path: string, obj: any, value: any): any {
+        const split: string[] = path.split('.');
+        const first = split[0];
+        const last = split.pop() as string;
+
+        const copy = this.copy(obj);
+
+        split.reduce((prev, curr) => {
+            if (prev) {
+                if (!prev.hasOwnProperty(curr)) {
+                    prev[curr] = {};
+                }
+                return prev[curr];
+            }
+        }, copy || self)[last] = value;
+
+        // Réaffectation de l'objet racine, afin de déclencher les observers
+        obj[first] = copy[first];
+    }
+
+    public initArray(to: any[], from: any[]) {
+        to.splice(0, to.length);
+        from.forEach((e) => to.push(e));
+    }
+
     public translate(key: string, fallbackKey: string): TranslateResult {
         if (this.$te(key)) {
             return this.$t(key);

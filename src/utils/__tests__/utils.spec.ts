@@ -20,9 +20,22 @@ describe('Test', () => {
 
     test('utils.resolveProperty', () => {
         const object = {
-            prop: 'propValue',
+            prop: {
+                subProp: 'value',
+            },
         };
-        expect(utils.resolveProperty('prop', object)).toMatch(object.prop);
+        expect(utils.resolveProperty('prop.subProp', object)).toMatch(object.prop.subProp);
+    });
+
+    test('utils.setProperty', () => {
+        const object = {
+            prop: {
+                subProp: 'value',
+            },
+        };
+
+        utils.setProperty('prop.subProp', object, 'new value');
+        expect(object.prop.subProp).toMatch('new value');
     });
 
     test('equals', () => {

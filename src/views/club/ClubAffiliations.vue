@@ -107,7 +107,7 @@
     }
 </style>
 <script lang="ts">
-import {Affiliation, AffiliationsApi, Board, Season, Sex} from '@/generated';
+import {AffiliationsApi, AffiliationStatus, Season, Sex} from '@/generated';
 import {Component, Mixins} from 'vue-property-decorator';
 import Utils from '@/utils/utils';
 import Validators from '@/utils/validators';
@@ -278,6 +278,7 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
                     siretNumber: '',
                     webSite: '',
                     id: 0,
+                    status: AffiliationStatus.TOCOMPLETE,
                 },
             };
         }

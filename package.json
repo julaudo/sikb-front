@@ -9,7 +9,7 @@
     "lint fix": "vue-cli-service lint fix",
     "test:unit": "jest --detectOpenHandles --no-cache --config jest-coverage.config.json",
     "coveralls": "jest --no-cache --config jest-coverage.config.json --coverage && cat ./coverage/lcov.info | coveralls",
-    "swagger": "openapi-generator generate -i swagger.yaml -t templates -c swagger-config.json -g typescript-axios -o src/generated --skip-validate-spec"
+    "swagger": "openapi-generator generate -i http://sikb-api.eu-west-3.elasticbeanstalk.com/swagger-ui/swagger.yaml -t templates -c swagger-config.json -g typescript-axios -o src/generated --skip-validate-spec"
   },
   "dependencies": {
     "@types/nprogress": "0.0.29",

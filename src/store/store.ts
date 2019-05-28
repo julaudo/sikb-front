@@ -1,6 +1,15 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {Club, ClubsApi, ConfigurationsApi, Credentials, IdentificationsApi, Season, Session} from '../generated';
+import {
+  Club,
+  ClubsApi,
+  ConfigurationsApi,
+  Credentials,
+  IdentificationsApi,
+  ProfileType,
+  Season,
+  Session,
+} from '../generated';
 import {AxiosPromise, AxiosResponse} from 'axios';
 import {UserInfo} from '@/store/UserInfo';
 import createPersistedState from 'vuex-persistedstate';
@@ -12,6 +21,7 @@ Vue.use(Vuex);
 interface State {
   userInfo: UserInfo | null;
   seasons: Season[];
+  profiles: ProfileType[];
   currentSeason: Season | null;
 }
 
@@ -22,6 +32,7 @@ const getters = {
   clubs: (s: State) => s.userInfo!.clubs,
   features: (s: State) => s.userInfo!.features,
   profile: (s: State) => s.userInfo!.profile,
+  profiles: (s: State) => s.profiles,
   seasons: (s: State) => new Map( // Look Ma!  No type annotations
       s.seasons.map((season) => [season.id, season] as [string, Season])),
   currentSeason: (s: State) => s!.currentSeason,
@@ -32,6 +43,7 @@ const store = new Vuex.Store({
   state: {
     userInfo: null,
     seasons: [],
+    profiles: [],
     currentSeason: null,
   },
   getters,
@@ -42,6 +54,9 @@ const store = new Vuex.Store({
     SET_SEASON_INFO: (s: State, seasons: Season[]) => {
       s.seasons = seasons;
       s.currentSeason = seasons.sort((s1, s2) => s2.id.localeCompare(s1.id))[0];
+    },
+    SET_PROFILE_INFO: (s: State, profiles: ProfileType[]) => {
+      s.profiles = profiles;
     },
     UPDATE_CLUB: (s: State, data: {index: number, club: Club}) => {
       s.userInfo!.clubs[data.index] = data.club;
@@ -91,16 +106,24 @@ const store = new Vuex.Store({
             });
           });
 
+          const profilesPromise = new ConfigurationsApi(baseOptions).findProfileTypes(response.data.access_token);
+          promises.push(profilesPromise);
+          const profiles: ProfileType[] = [];
+          profilesPromise.then((r) => {
+            r.data.forEach((p) => profiles.push(p));
+          });
+
           const seasonsPromise = new ConfigurationsApi(baseOptions).findSeasons(response.data.access_token);
           promises.push(seasonsPromise);
           const seasons: Season[] = [];
-          seasonsPromise.then((seasonsResponse: AxiosResponse<Season[]>) => {
-            seasonsResponse.data.forEach((s: Season) => seasons.push(s));
+          seasonsPromise.then((r) => {
+            r.data.forEach((s) => seasons.push(s));
           });
 
           Promise.all(promises).then(() => {
             commit('SET_LOGIN_INFO', userInfo);
             commit('SET_SEASON_INFO', seasons);
+            commit('SET_PROFILE_INFO', profiles);
             resolve();
           });
         }).catch((error: any) => {

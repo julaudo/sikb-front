@@ -86,6 +86,18 @@ export interface Affiliation {
     board: Board;
     /**
      * 
+     * @type {AffiliationStatus}
+     * @memberof Affiliation
+     */
+    status: AffiliationStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof Affiliation
+     */
+    comment?: string;
+    /**
+     * 
      * @type {number}
      * @memberof Affiliation
      */
@@ -158,6 +170,18 @@ export interface AffiliationForCreation {
      * @memberof AffiliationForCreation
      */
     board: BoardForCreation;
+    /**
+     * 
+     * @type {AffiliationStatus}
+     * @memberof AffiliationForCreation
+     */
+    status?: AffiliationStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof AffiliationForCreation
+     */
+    comment?: string;
 }
 
 /**
@@ -226,6 +250,29 @@ export interface AffiliationForUpdate {
      * @memberof AffiliationForUpdate
      */
     board?: Board;
+    /**
+     * 
+     * @type {AffiliationStatus}
+     * @memberof AffiliationForUpdate
+     */
+    status?: AffiliationStatus;
+    /**
+     * 
+     * @type {string}
+     * @memberof AffiliationForUpdate
+     */
+    comment?: string;
+}
+
+/**
+ * Once an affiliation is created, if the status is not provided then it\'s initialized with TO_COMPLETE. Then available transitions are : - TO_COMPLETE ==> SUBMITTED - SUBMITTED ==> VALIDATED - SUBMITTED ==> TO_COMPLETE
+ * @export
+ * @enum {string}
+ */
+export enum AffiliationStatus {
+    TOCOMPLETE = 'TO_COMPLETE',
+    SUBMITTED = 'SUBMITTED',
+    VALIDATED = 'VALIDATED'
 }
 
 /**
@@ -490,6 +537,7 @@ export enum Functionality {
     CLUBCREATE = 'CLUB_CREATE',
     CLUBUPDATE = 'CLUB_UPDATE',
     CLUBDELETE = 'CLUB_DELETE',
+    AFFILIATIONVALIDATE = 'AFFILIATION_VALIDATE',
     PERSONREAD = 'PERSON_READ',
     PERSONCREATE = 'PERSON_CREATE',
     PERSONUPDATE = 'PERSON_UPDATE',

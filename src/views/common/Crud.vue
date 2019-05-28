@@ -8,7 +8,7 @@
                     vertical
             ></v-divider>
 
-            <v-btn :loading="refreshing" color="primary" dark class="mb-2" icon v-on:click="refresh()"><v-icon>refresh</v-icon></v-btn>
+            <v-btn :loading="refreshing" color="primary" dark class="mb-2" icon @click="refresh()"><v-icon>refresh</v-icon></v-btn>
             <v-divider
                     class="mx-2"
                     inset
@@ -17,6 +17,7 @@
 
             <v-spacer>
             </v-spacer>
+            <v-btn color="primary" dark class="mb-2" icon @click="create()"><v-icon>add</v-icon></v-btn>
 
 
             <v-dialog v-model="deleteDialog" persistent @keydown.esc="escapeDeleteDialog()">
@@ -34,7 +35,6 @@
             </v-dialog>
 
             <v-dialog v-model="dialog" max-width="700px" persistent @keydown.esc="escape()">
-                <v-btn slot="activator" color="primary" dark class="mb-2" icon><v-icon>add</v-icon></v-btn>
                 <v-card>
                     <v-card-title>
                         <span class="headline">{{ editedItem.id ? $t(crudKey + ".editDialogLabel") : $t(crudKey + ".createDialogLabel")}}</span>
@@ -48,6 +48,27 @@
                             <v-container grid-list-md>
                                 <v-layout wrap>
                                     <v-flex v-for="header in propertyHeaders" v-bind:key="header.value" xs12 sm12 md12 style="padding:0px">
+                                        <v-select
+                                                v-if="header.type === TYPE_LIST"
+                                                :value="resolveProperty(header.value, editedItem)"
+                                                @input="setProperty(header.value, editedItem, header.list.filter((e) => header.itemValue.print(e) === $event)[0])"
+                                                :items="header.list"
+                                                :item-text="header.itemText.printer"
+                                                :item-value="header.itemValue.printer"
+                                                :label="getFieldName(header)"
+                                        ></v-select>
+
+                                        <MultiEditor
+                                                v-if="header.type === TYPE_LIST_MULTI"
+                                                :value="resolveProperty(header.value, editedItem)"
+                                                :items="header.list"
+                                                :itemText="header.itemText"
+                                                :chipText="header.chipText"
+                                                :format="(a)=>a.name"
+                                                :label="getFieldName(header)"
+                                                @input="setProperty(header.value, editedItem, $event)"
+                                        ></MultiEditor>
+
                                         <DateEditor
                                                 v-if="header.type === TYPE_DATE"
                                                 v-model="editedItem[header.value]"
@@ -83,11 +104,8 @@
                         <template v-if="header.type === TYPE_IMAGE && resolveProperty(header.value, props.item)">
                             <v-img :src="resolveProperty(header.value, props.item)"/>
                         </template>
-                        <template v-if="header.type === TYPE_DATE && resolveProperty(header.value, props.item)">
-                            {{resolveProperty(header.value, props.item)}}
-                        </template>
-                        <template v-if="!header.type">
-                            {{resolveProperty(header.value, props.item)}}
+                        <template v-if="header.type !== TYPE_IMAGE && resolveProperty(header.value, props.item)">
+                            {{getColumnText(header, props.item)}}
                         </template>
                     </td>
 
@@ -128,9 +146,10 @@ import Utils from '@/utils/utils';
 import FieldType from '@/views/common/FieldType';
 import Validators from '@/utils/validators';
 import DateEditor from '@/views/common/DateEditor.vue';
+import MultiEditor from '@/views/common/MultiEditor.vue';
 
 @Component({
-    components: {DateEditor},
+    components: {DateEditor, MultiEditor},
 })
 export default class Crud extends Mixins(Utils, FieldType, Validators) {
 
@@ -164,6 +183,31 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) {
     private pagination = {
         rowsPerPage: 1,
     };
+
+    public getColumnText(header: any, item: any) {
+        if (!this.resolveProperty(header.value, item)) {
+            return '';
+        }
+        if (header.type === this.TYPE_DATE) {
+            return this.resolveProperty(header.value, item); // Todo format
+        } else if (header.type === this.TYPE_LIST) {
+            return this.getItemText(header, this.resolveProperty(header.value, item));
+        } else if (header.type === this.TYPE_LIST_MULTI) {
+            return this.resolveProperty(header.value, item).map((i: any) => this.getItemText(header, i)).join(', ');
+        } else {
+            return this.resolveProperty(header.value, item);
+        }
+    }
+
+    public getItemText(header: any, item: any) {
+        if (header.chipText) {
+            return header.chipText.print(item);
+        }
+        if (header.itemText) {
+            return header.itemText.print(item);
+        }
+        return item;
+    }
 
     public getHeaderName(h: any) {
         return h.type === this.TYPE_ACTION ? '' : this.$t(this.crudKey + '.field.' + h.value);
@@ -226,7 +270,9 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) {
         }
 
         const elt = this.$el.childNodes[1] as HTMLElement;
-        elt.style.height = header + this.pagination.rowsPerPage * row + 'px';
+        if (elt.style) {
+            elt.style.height = header + this.pagination.rowsPerPage * row + 'px';
+        }
     }
 
     private action(a: string, item: ObjectWithId) {
@@ -269,7 +315,7 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) {
     private close() {
         this.dialog = false;
         setTimeout(() => {
-            this.editedItem = {};
+            this.editedItem = {profile: {clubIds: [1]}} as ObjectWithId;
         }, 300);
     }
 
@@ -300,6 +346,19 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) {
         if (!this.deleting) {
             this.deleteDialog = false;
         }
+    }
+
+    private defaultItem() {
+        const item = {};
+        this.headers.filter((h) => h.type !== this.TYPE_ACTION).forEach((h) => {
+            this.setProperty(h.value, item, null);
+        });
+        return item;
+    }
+
+    private create() {
+        this.editedItem = this.copy(this.defaultItem());
+        this.dialog = true;
     }
 
     private refresh() {
