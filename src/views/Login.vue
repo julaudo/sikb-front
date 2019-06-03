@@ -10,20 +10,25 @@
                             </v-toolbar>
                             <v-card-text>
                                 <v-form v-model="valid">
-                                    <v-text-field v-model="credientials.login"
+                                    <v-text-field
+                                                  id="login"
+                                                  v-model="credientials.login"
                                                   :rules="[required('validator.login.required')]"
                                                   prepend-icon="person" name="login" :label="$t('login.login')" type="text"></v-text-field>
-                                    <v-text-field v-model="credientials.password"
+                                    <v-text-field
+                                                  id="password"
+                                                  v-model="credientials.password"
                                                   :type="showPassword ? 'text' : 'password'"
                                                   @click:append="showPassword = !showPassword   "
                                                   :append-icon="showPassword ? 'visibility' : 'visibility_off'"
                                                   :rules="[required('validator.password.required')]"
-                                                  id="password" prepend-icon="lock" name="password" :label="$t('login.password')"></v-text-field>
+                                                  prepend-icon="lock" name="password" :label="$t('login.password')"></v-text-field>
                                 </v-form>
                             </v-card-text>
                             <v-card-actions>
                                 <v-spacer></v-spacer>
                                 <v-btn
+                                        id="btnLogin"
                                         :loading="loading"
                                         :disabled="loading || !valid"
                                         color="primary" @click="onLogin()">{{$t('login.validate')}}</v-btn>

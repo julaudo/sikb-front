@@ -17,10 +17,10 @@
 
             <v-spacer>
             </v-spacer>
-            <v-btn color="primary" dark class="mb-2" icon @click="create()"><v-icon>add</v-icon></v-btn>
+            <v-btn id="btnCrudCreate" color="primary" dark class="mb-2" icon @click="create()"><v-icon>add</v-icon></v-btn>
 
 
-            <v-dialog v-model="deleteDialog" persistent @keydown.esc="escapeDeleteDialog()">
+            <v-dialog id="refDeleteDialog" v-model="deleteDialog" persistent @keydown.esc="escapeDeleteDialog()">
                 <v-card>
                     <v-card-title class="headline">{{$t("crud.confirmDelete")}}</v-card-title>
 
@@ -28,13 +28,13 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
 
-                        <v-btn color="blue darken-1" :disabled="deleting" flat @click="deleteDialog = false ">{{$t("no")}}</v-btn>
-                        <v-btn color="blue darken-1" :disabled="deleting" :loading="deleting" flat @click="onDeleteItem">{{$t("yes")}}</v-btn>
+                        <v-btn id="refDeleteDialogNo" color="blue darken-1" :disabled="deleting" flat @click="deleteDialog = false ">{{$t("no")}}</v-btn>
+                        <v-btn id="refDeleteDialogYes" color="blue darken-1" :disabled="deleting" :loading="deleting" flat @click="onDeleteItem">{{$t("yes")}}</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
 
-            <v-dialog v-model="dialog" max-width="700px" persistent @keydown.esc="escape()">
+            <v-dialog id="refDialog" v-model="dialog" max-width="700px" persistent @keydown.esc="escape()">
                 <v-card>
                     <v-card-title>
                         <span class="headline">{{ editedItem.id ? $t(crudKey + ".editDialogLabel") : $t(crudKey + ".createDialogLabel")}}</span>
@@ -84,8 +84,8 @@
                         </v-card-text>
                         <v-card-actions>
                             <v-spacer></v-spacer>
-                            <v-btn color="blue darken-1" :disabled="saving" flat @click="close">{{$t("cancel")}}</v-btn>
-                            <v-btn color="blue darken-1" :disabled="saving || !valid" :loading="saving" flat @click="save">{{$t("save")}}</v-btn>
+                            <v-btn id="refDialogCancel" color="blue darken-1" :disabled="saving" flat @click="close">{{$t("cancel")}}</v-btn>
+                            <v-btn id="refDialogSave" color="blue darken-1" :disabled="saving || !valid" :loading="saving" flat @click="save">{{$t("save")}}</v-btn>
                         </v-card-actions>
                     </v-form>
                 </v-card>
@@ -141,7 +141,7 @@
 <script lang="ts">
 import Component from 'vue-class-component';
 import {Mixins, Prop, Watch} from 'vue-property-decorator';
-import {ObjectWithId} from '@/model/model';
+import {ICrud, ObjectWithId} from '@/model/model';
 import Utils from '@/utils/utils';
 import FieldType from '@/views/common/FieldType';
 import Validators from '@/utils/validators';
@@ -151,7 +151,7 @@ import MultiEditor from '@/views/common/MultiEditor.vue';
 @Component({
     components: {DateEditor, MultiEditor},
 })
-export default class Crud extends Mixins(Utils, FieldType, Validators) {
+export default class Crud extends Mixins(Utils, FieldType, Validators) implements ICrud {
 
     get propertyHeaders() {
         return this.headers.filter((f) => f.type !== this.TYPE_ACTION);
@@ -170,11 +170,12 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) {
     @Prop() public refreshing!: boolean;
     @Prop() public crudKey!: string;
 
-    protected editedItem: ObjectWithId = {};
-    protected deletingItem: ObjectWithId = {};
+    public dialog = false;
+    public deleteDialog = false;
 
-    protected dialog = false;
-    protected deleteDialog = false;
+    public editedItem: ObjectWithId = {};
+    public deletingItem: ObjectWithId = {};
+
     private saving = false;
     private deleting = false;
 

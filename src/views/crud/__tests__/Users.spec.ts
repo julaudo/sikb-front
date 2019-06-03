@@ -6,13 +6,27 @@ import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import Users from '@/views/crud/Users.vue';
 import store from '@/store/store';
+import globalAxios from 'axios';
+import {initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
+import {
+    changed,
+    decremented,
+    equal,
+    incremented,
+    notChanged,
+    testCreate,
+    testDelete,
+    testEdit
+} from './common';
 
 
 describe('Users.vue', () => {
     let wrapper: any;
 
-
-    beforeEach(() => {
+    beforeEach((done) => {
+        initAxiosInterceptors(globalAxios);
+        jest.setTimeout(30000);
+        require('dotenv').config();
         Vue.use(Vuetify);
 
         store.state.userInfo = {
@@ -25,21 +39,104 @@ describe('Users.vue', () => {
 
         Vue.component('Users', Users);
 
+
         wrapper = mount(Vue.extend({
-            template: `<div><Users /></div>`,
+            template: `<div data-app="true" class="application theme--light" id="app"><Users /></div>`,
         }), {
-            sync: true,
+            attachToDocument: true,
+            sync: false,
             i18n,
             store,
         });
 
+        startjsonserver(() => {},done);
     });
 
-    test('test store getters', async (done) => {
+    afterEach((done) => {
+        wrapper.destroy();
+        stopjsonserver(done);
+    });
 
-
+    test('delete user', async (done) => {
+        await testDelete(Users, wrapper, () => {
+            wrapper.find('#refDeleteDialogYes').trigger('click');
+        }, decremented);
 
         done();
+    });
 
+
+    test('cancel delete user', async (done) => {
+        await testDelete(Users, wrapper, () => {
+            wrapper.find('#refDeleteDialogNo').trigger('click');
+        }, equal);
+
+        done();
+    });
+
+    test('escape delete user', async (done) => {
+        await testDelete(Users, wrapper, () => {
+            wrapper.find('#refDeleteDialogNo').trigger('keydown.esc');
+        }, equal);
+
+        done();
+    });
+
+    test('edit user', async (done) => {
+        await testEdit(Users, wrapper, () => {
+            wrapper.find('#refDialogSave').trigger('click');
+        }, changed);
+
+        done();
+    });
+
+    test('edit cancel', async (done) => {
+        await testEdit(Users, wrapper, () => {
+            wrapper.find('#refDialogCancel').trigger('click');
+        }, notChanged);
+
+        done();
+    });
+
+    test('edit escape', async (done) => {
+        await testEdit(Users, wrapper, () => {
+            wrapper.find('#refDialogCancel').trigger('keydown.esc');
+        }, notChanged);
+
+        done();
+    });
+
+    const setData = () => {
+        const mailInput = wrapper.find('#refDialog').findAll('input').at(0) as any;
+        const mail = 'test@mail.fr';
+        mailInput.element.value = mail;
+        mailInput.trigger('input');
+
+        const select = wrapper.find('#refDialog').find('.v-select').vm as any;
+        select.selectItem(1);
+    }
+
+    test('create user', async (done) => {
+        await testCreate(Users, wrapper, () => {
+            wrapper.find('#refDialogSave').trigger('click');
+        }, setData, incremented);
+
+        done();
+    });
+
+    test('create user', async (done) => {
+        await testCreate(Users, wrapper, () => {
+            wrapper.find('#refDialogCancel').trigger('click');
+        }, setData, equal);
+
+        done();
+    });
+
+    test('create user', async (done) => {
+        await testCreate(Users, wrapper, () => {
+            wrapper.find('#refDialogCancel').trigger('keydown.esc');
+        }, setData, equal);
+
+        done();
     });
 });

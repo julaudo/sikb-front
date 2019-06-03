@@ -16,7 +16,7 @@
 import { Configuration } from "./configuration";
 import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
 
-export const BASE_PATH = "https://sikb-api.eu-west-3.elasticbeanstalk.com/api/v1".replace(/\/+$/, "");
+export const BASE_PATH = process.env.VUE_APP_API_BASE!.replace(/\/+$/, "");
 
 /**
  *

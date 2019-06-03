@@ -6,10 +6,10 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import store from '@/store/store';
-import {Season, SeasonWithAffiliation, Sex} from '@/generated';
+import {Sex} from '@/generated';
 import Router from 'vue-router';
 import {Features} from '@/model/model';
-import flushPromises from 'flush-promises';
+import {flushPromises} from '@/test/utils';
 
 const testButton = (wrapper: any, disabled: boolean, name: string) => {
     const btn = wrapper.find(name);
@@ -78,6 +78,7 @@ describe('ClubAffiliations.vue', () => {
 
 
     beforeEach(() => {
+        jest.setTimeout(30000);
         Vue.use(Vuetify);
         Vue.use(Router);
 
@@ -155,10 +156,10 @@ describe('ClubAffiliations.vue', () => {
         const MockAdapter = require('axios-mock-adapter');
         // This sets the mock adapter on the default instance
         const mock = new MockAdapter(axios);
-        mock.onGet(/.*api\/v1\/clubs\/12\/affiliations\/?/).reply(200, [affiliation20162017, affiliation20172018]);
-        mock.onGet(/.*api\/v1\/clubs\/13\/affiliations\/?/).reply(200, [affiliation20162017]);
-        mock.onGet(/.*api\/v1\/clubs\/14\/affiliations\/?/).reply(200, []);
-        mock.onPost(/.*api\/v1\/clubs\/14\/affiliations\/?/).reply(201);
+        mock.onGet(/.*clubs\/12\/affiliations\/?/).reply(200, [affiliation20162017, affiliation20172018]);
+        mock.onGet(/.*clubs\/13\/affiliations\/?/).reply(200, [affiliation20162017]);
+        mock.onGet(/.*clubs\/14\/affiliations\/?/).reply(200, []);
+        mock.onPost(/.*clubs\/14\/affiliations\/?/).reply(201);
 
         router.push('/club/12/affiliations');
         await flushPromises();
@@ -251,6 +252,7 @@ describe('ClubAffiliations.vue', () => {
 
         wrapper.find('#btnAffiliationValidate').trigger('click');
 
+        mock.reset();
         done();
 
     });

@@ -7,14 +7,13 @@
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "lint fix": "vue-cli-service lint fix",
-    "test:unit": "jest --detectOpenHandles --no-cache --config jest-coverage.config.json",
-    "coveralls": "jest --no-cache --config jest-coverage.config.json --coverage && cat ./coverage/lcov.info | coveralls",
+    "test:unit": "jest --detectOpenHandles --no-cache --config jest-coverage.config.js",
+    "coveralls": "jest --no-cache --config jest-coverage.config.js --coverage && cat ./coverage/lcov.info | coveralls",
     "swagger": "openapi-generator generate -i http://sikb-api.eu-west-3.elasticbeanstalk.com/swagger-ui/swagger.yaml -t templates -c swagger-config.json -g typescript-axios -o src/generated --skip-validate-spec"
   },
   "dependencies": {
     "@types/nprogress": "0.0.29",
     "axios": "^0.18.0",
-    "flush-promises": "^1.0.2",
     "nprogress": "^0.2.0",
     "vue": "^2.6.10",
     "vue-axios": "^2.1.4",
@@ -25,7 +24,8 @@
     "vuetify": "^1.5.14",
     "vuex": "^3.1.1",
     "vuex-class": "^0.3.2",
-    "vuex-persistedstate": "^2.5.4"
+    "vuex-persistedstate": "^2.5.4",
+    "wait-for-expect": "^1.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
@@ -43,12 +43,14 @@
     "babel-plugin-dynamic-import-node": "^2.2.0",
     "babel-plugin-macros": "^2.5.1",
     "coveralls": "^3.0.3",
+    "dotenv": "^8.0.0",
     "jest": "^24.8.0",
+    "json-server": "^0.15.0",
     "require-context.macro": "^1.0.4",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.4.5",
+    "typescript": "^3.5.1",
     "vue-cli-plugin-i18n": "^0.5.2",
     "vue-cli-plugin-vuetify": "^0.5.0",
     "vue-jest": "^3.0.4",

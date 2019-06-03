@@ -9,11 +9,11 @@ export default class CrudParent extends Vue {
     @Getter public userToken!: string;
 
     public headers: any[] = [];
-    protected items: ObjectWithId[] = [];
+    public items: ObjectWithId[] = [];
 
     protected refreshing = false;
 
-    public mounted() {
+    public created() {
         this.refreshItems();
     }
 
@@ -35,12 +35,15 @@ export default class CrudParent extends Vue {
 
     public refreshItems() {
         this.refreshing = true;
-        this.getRefreshPromise()!.then((response: AxiosResponse<any[]>) => {
+        const promise = this.getRefreshPromise();
+        promise!.then((response: AxiosResponse<any[]>) => {
             this.items = response.data;
             this.refreshing = false;
         }).catch(() => {
             this.refreshing = false;
         });
+
+        return promise;
     }
 
     public deleteItem(id: number, successCallback: any) {
