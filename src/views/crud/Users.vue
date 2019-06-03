@@ -86,12 +86,8 @@ export default class Users extends Mixins(CrudParent, FieldType, Validators, Uti
             this.initArray(this.clubs, r.data);
             this.initArray(this.clubIds, r.data.sort((a, b) => a.name.localeCompare(b.name)).map((c) => c.id));
             return profilesPromise;
-        }, () => {
-            return profilesPromise;
         }).then((r) => {
             this.initArray(this.profiles, r.data.sort((a, b) => a.name.localeCompare(b.name)));
-            return usersPromise;
-        }, () => {
             return usersPromise;
         });
 

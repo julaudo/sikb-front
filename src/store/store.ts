@@ -29,10 +29,10 @@ interface State {
 const getters = {
   userLogin: (s: State) => s.userInfo!.login,
   userToken: (s: State) => s.userInfo!.token,
-  clubs: (s: State) => s.userInfo!.clubs,
-  features: (s: State) => s.userInfo!.features,
+  clubs: (s: State) => s.userInfo!.clubs || [],
+  features: (s: State) => s.userInfo!.features || [],
   profile: (s: State) => s.userInfo!.profile,
-  profiles: (s: State) => s.profiles,
+  profiles: (s: State) => s.profiles || [],
   seasons: (s: State) => new Map( // Look Ma!  No type annotations
       s.seasons.map((season) => [season.id, season] as [string, Season])),
   currentSeason: (s: State) => s!.currentSeason,

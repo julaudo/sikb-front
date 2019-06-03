@@ -68,17 +68,24 @@ export default class App extends Vue {
   private snackbar = false;
   private snackbarText = '';
   private count = 0;
+  private requestInterceptor = 0;
+  private responseInterceptor = 0;
 
+
+  public beforeDestroy() {
+    Axios.interceptors.request.eject(this.requestInterceptor);
+    Axios.interceptors.response.eject(this.responseInterceptor);
+  }
 
   public mounted() {
     const vm = this;
 
-    Axios.interceptors.request.use((req) => {
+    this.requestInterceptor = Axios.interceptors.request.use((req) => {
       this.incrementCount();
       return req;
     });
 
-    Axios.interceptors.response.use((response) => {
+    this.responseInterceptor = Axios.interceptors.response.use((response) => {
       this.decrementCount();
       return response;
     }, (error) => {

@@ -2,7 +2,6 @@ import {flushPromises} from '@/test/utils';
 import {Wrapper} from '@vue/test-utils';
 import Crud from '@/views/common/Crud.vue';
 import {ICrud, ICrudParent} from '@/model/model';
-import {User, UsersApi} from '@/generated';
 
 export const getRows = (wrapper: Wrapper<any>) => {
     return wrapper.find('.v-datatable').find('tbody').findAll('tr');
@@ -35,7 +34,7 @@ export const testDelete = async (component: any, wrapper: Wrapper<any>, action: 
 
 
 
-export const testEdit = async (component: any, wrapper: Wrapper<any>, action: any, check: (current: any, before: any, after: any) => void) => {
+export const testEdit = async (component: any, wrapper: Wrapper<any>, action: any, getData: (id: any) => any, check: (current: any, before: any, after: any) => void) => {
     const vm = wrapper.find(component).vm as any as ICrudParent;
     const crud = wrapper.find(Crud).vm as unknown as ICrud;
 
@@ -59,20 +58,19 @@ export const testEdit = async (component: any, wrapper: Wrapper<any>, action: an
     expect(crud.dialog).toBeTruthy();
     expect(crud.editedItem.id).toBeTruthy();
 
-    const id = crud.editedItem.id;
-
     const mailInput = wrapper.find('#refDialog').find('input') as any;
     const oldMail = mailInput.element.value;
     const newMail = oldMail + '_new';
     mailInput.element.value = newMail;
     mailInput.trigger('input');
+    const id = crud.editedItem.id;
 
     action();
     await flushPromises();
     expect(crud.dialog).toBeFalsy();
 
-    const user: User = (await new UsersApi().getUser('', id)).data;
-    check(user.email, oldMail, newMail);
+    const data = await getData(id);
+    check(data, oldMail, newMail);
 };
 
 export const testCreate = async (component: any, wrapper: Wrapper<any>, action: any, setData: () => void, countExpect: (before: number, after: number) => void) => {

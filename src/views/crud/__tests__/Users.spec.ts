@@ -16,8 +16,9 @@ import {
     notChanged,
     testCreate,
     testDelete,
-    testEdit
+    testEdit,
 } from './common';
+import {UsersApi} from '@/generated';
 
 
 describe('Users.vue', () => {
@@ -49,7 +50,7 @@ describe('Users.vue', () => {
             store,
         });
 
-        startjsonserver(() => {},done);
+        startjsonserver(() => undefined, done);
     });
 
     afterEach((done) => {
@@ -82,10 +83,14 @@ describe('Users.vue', () => {
         done();
     });
 
+    const getData = async (id: any) => {
+        return (await new UsersApi().getUser('', id)).data.email;
+    };
+
     test('edit user', async (done) => {
         await testEdit(Users, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
-        }, changed);
+        }, getData, changed);
 
         done();
     });
@@ -93,7 +98,7 @@ describe('Users.vue', () => {
     test('edit cancel', async (done) => {
         await testEdit(Users, wrapper, () => {
             wrapper.find('#refDialogCancel').trigger('click');
-        }, notChanged);
+        }, getData, notChanged);
 
         done();
     });
@@ -101,7 +106,7 @@ describe('Users.vue', () => {
     test('edit escape', async (done) => {
         await testEdit(Users, wrapper, () => {
             wrapper.find('#refDialogCancel').trigger('keydown.esc');
-        }, notChanged);
+        }, getData, notChanged);
 
         done();
     });
@@ -114,7 +119,7 @@ describe('Users.vue', () => {
 
         const select = wrapper.find('#refDialog').find('.v-select').vm as any;
         select.selectItem(1);
-    }
+    };
 
     test('create user', async (done) => {
         await testCreate(Users, wrapper, () => {

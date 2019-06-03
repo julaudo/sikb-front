@@ -7,12 +7,12 @@ import i18n from '@/i18n';
 import store from '@/store/store';
 import globalAxios from 'axios';
 import {initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
-import Seasons from '@/views/crud/Seasons.vue';
 import {changed, decremented, incremented, testCreate, testDelete, testEdit} from './common';
-import {ConfigurationsApi, User, UsersApi} from '@/generated';
+import {ClubsApi} from '@/generated';
+import Clubs from '@/views/crud/Clubs.vue';
 
 
-describe('Seasons.vue', () => {
+describe('Clubs.vue', () => {
     let wrapper: any;
 
     beforeEach((done) => {
@@ -29,11 +29,11 @@ describe('Seasons.vue', () => {
             features: [],
         };
 
-        Vue.component('Seasons', Seasons);
+        Vue.component('Clubs', Clubs);
 
 
         wrapper = mount(Vue.extend({
-            template: `<div data-app="true" class="application theme--light" id="app"><Seasons /></div>`,
+            template: `<div data-app="true" class="application theme--light" id="app"><Clubs /></div>`,
         }), {
             attachToDocument: true,
             sync: false,
@@ -49,8 +49,8 @@ describe('Seasons.vue', () => {
         stopjsonserver(done);
     });
 
-    test('delete season', async (done) => {
-        await testDelete(Seasons, wrapper, () => {
+    test('delete club', async (done) => {
+        await testDelete(Clubs, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
         }, decremented);
 
@@ -58,11 +58,11 @@ describe('Seasons.vue', () => {
     });
 
     const getData = async (id: any) => {
-        return (await new ConfigurationsApi().findSeasons('')).data.filter(s => s.id === id)[0].description;
+        return (await new ClubsApi().getClubById('', id)).data.name;
     };
 
-    test('edit season', async (done) => {
-        await testEdit(Seasons, wrapper, () => {
+    test('edit club', async (done) => {
+        await testEdit(Clubs, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, getData, changed);
 
@@ -71,25 +71,19 @@ describe('Seasons.vue', () => {
 
     const setData = () => {
         const descInput = wrapper.find('#refDialog').findAll('input').at(0) as any;
-        const desc = 'test@mail.fr';
+        const desc = 'name';
         descInput.element.value = desc;
         descInput.trigger('input');
 
 
         const beginInput = wrapper.find('#refDialog').findAll('input').at(1) as any;
-        const begin = '01/01/1985';
+        const begin = 'shortName';
         beginInput.element.value = begin;
         beginInput.trigger('input');
-
-
-        const endInput = wrapper.find('#refDialog').findAll('input').at(2) as any;
-        const end = '31/12/1985';
-        endInput.element.value = end;
-        endInput.trigger('input');
     };
 
-    test('create season', async (done) => {
-        await testCreate(Seasons, wrapper, () => {
+    test('create club', async (done) => {
+        await testCreate(Clubs, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);
 

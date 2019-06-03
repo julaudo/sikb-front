@@ -67,7 +67,6 @@
                 this.loading = false;
             }).catch((error: any) => {
                 this.loading = false;
-                Logger.error(error);
             });
         }
 

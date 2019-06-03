@@ -103,27 +103,34 @@ export const subRoutes: RouteConfig[] = [
   },
 ];
 
-const router = new Router({
-  mode: 'hash',
-  base: process.env.BASE_URL,
-  routes: [
-    {
-      path: '/login',
-      name: 'login',
-      component: () => import( './views/Login.vue'),
-    },
-    {
-      path: '/',
-      component: () => import( './views/layout/Layout.vue'),
-      redirect: '/login',
-      children: subRoutes,
-    },
-    {
-      path: '*',
-      redirect: '/home',
-    },
-  ],
-});
+const routes = [
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import( './views/Login.vue'),
+  },
+  {
+    path: '/',
+    component: () => import( './views/layout/Layout.vue'),
+    redirect: '/login',
+    children: subRoutes,
+  },
+  {
+    path: '*',
+    redirect: '/home',
+  },
+];
+
+
+export const createRouter = () => {
+  return new Router({
+    mode: 'hash',
+    base: process.env.BASE_URL,
+    routes,
+  });
+};
+
+const router = createRouter();
 
 export default router;
 

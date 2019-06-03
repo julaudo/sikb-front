@@ -10,7 +10,7 @@ export const startjsonserver = (init: (server: any) => void, done: any) => {
         const server = jsonServer.create();
         const router = jsonServer.router('db.json');
         const middlewares = jsonServer.defaults();
-
+        server.use(jsonServer.bodyParser);
         server.use(middlewares);
         init(server);
         server.use(router);

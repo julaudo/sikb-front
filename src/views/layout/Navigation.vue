@@ -135,8 +135,6 @@ export default class Navigation extends Vue {
     private logout() {
         this.$store.dispatch('Logout').then(() => {
             this.$router.push({ path: '/login'});
-        }).catch((error: any) => {
-            Logger.error(error);
         });
     }
 }
