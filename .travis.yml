@@ -3,6 +3,9 @@ node_js: stable
 script:
   - npm run build
   - npm run coveralls
+  - codecov -f coverage/*.json
+env:
+  - CODECOV_TOKEN="ef0b7b06-ce00-4a52-bd91-a76396544230"
 deploy:
   - provider: script
     skip_cleanup: true
