@@ -13,14 +13,14 @@
                 <v-card-text>
                     <v-layout row wrap align-baseline="true">
                         <v-flex xs12>
-                            <v-text-field
+                            <v-text-field id="clubName"
                                     v-model="club.name"
                                     :label="$t('clubs.field.name')"
                                     :rules="[required()]">
                             </v-text-field>
                         </v-flex>
                         <v-flex xs12>
-                            <v-text-field
+                            <v-text-field id="clubShortName"
                                     v-model="club.shortName"
                                     :label="$t('clubs.field.shortName')"
                                     :rules="[required()]"
@@ -48,7 +48,7 @@
                     </v-layout>
                 </v-card-text>
                 <v-card-actions class="justify-center">
-                    <v-btn
+                    <v-btn id="btnCancel"
                             :disabled="!modified || saving"
                             flat color="blue darken-1"
                             @click="reset"
@@ -56,7 +56,7 @@
                         {{$t("cancel")}}
                     </v-btn>
 
-                    <v-btn
+                    <v-btn id="btnValidate"
                             :loading="saving"
                             :disabled="!valid || !modified || saving"
                             flat color="blue darken-1"
