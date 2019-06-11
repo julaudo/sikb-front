@@ -16,6 +16,7 @@ import {createRouter} from '@/router';
 import App from '@/App.vue';
 import globalAxios from 'axios';
 import ClubVue from '@/views/club/ClubVue.vue';
+import {Club} from '@/generated';
 
 
 
@@ -39,47 +40,7 @@ describe('ClubVue.vue', () => {
             router,
             store,
         });
-        startjsonserver((server: any) => {
-            server.post('/users/login', (req: any, res: any) => {
-                if (req.body.login === 'loginOK') {
-                    res.jsonp({
-                        access_token: 'ZWEyMDMyMDItNDFmMS00ZmI1LTllYWYtYjYxNDQ2N2MyMWZlMjAxOS0wNi0wN1QwNjoxNToyNC42MjZa',
-                        user: {
-                            id: 1,
-                            email: 'myEmail@kin-ball.fr',
-                            profile: {
-                                type: {
-                                    id: 1,
-                                    name: 'Administrator',
-                                    functionalities: [
-                                        'USER_READ',
-                                        'USER_CREATE',
-                                        'USER_UPDATE',
-                                        'USER_DELETE',
-                                        'CLUB_READ',
-                                        'CLUB_CREATE',
-                                        'CLUB_UPDATE',
-                                        'CLUB_DELETE',
-                                        'AFFILIATION_VALIDATE',
-                                        'PERSON_READ',
-                                        'PERSON_CREATE',
-                                        'PERSON_UPDATE',
-                                        'PERSON_DELETE',
-                                        'SEASON_READ',
-                                        'SEASON_CREATE',
-                                        'SEASON_UPDATE',
-                                        'SEASON_DELETE',
-                                    ],
-                                },
-                                clubIds: [],
-                            },
-                        },
-                    });
-                } else {
-                    res.status(500).jsonp({});
-                }
-            });
-        }, done);
+        startjsonserver((server: any) => undefined, done);
     });
 
     afterEach(async (done) => {
@@ -94,14 +55,13 @@ describe('ClubVue.vue', () => {
 
     const expectInput = (selector: string, value: string) => {
         expect(wrapper.find(selector).element.value).toEqual(value);
-    }
+    };
 
-    test('successful login', async (done) => {
+    test('test reset', async (done) => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         await flushPromises();
         router.push({path: '/club/1/general'});
         await flushPromises();
-        const clubVue = wrapper.find(ClubVue).vm;
 
         const clubName = wrapper.find("#clubName").element.value;
         const clubShortName = wrapper.find("#clubShortName").element.value;
@@ -113,9 +73,92 @@ describe('ClubVue.vue', () => {
         setInputText('#clubShortName', newClubShortName);
 
         wrapper.find('#btnCancel').trigger('click');
+        await flushPromises();
 
         expectInput('#clubName', clubName);
         expectInput('#clubShortName', clubShortName);
+
+        done();
+    });
+
+    test('test set name', async (done) => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+        await flushPromises();
+        router.push({path: '/club/1/general'});
+        await flushPromises();
+
+        const clubName = wrapper.find("#clubName").element.value;
+        const clubShortName = wrapper.find("#clubShortName").element.value;
+
+        const newClubName = clubName + '_new';
+        const newClubShortName = clubShortName + '_new';
+
+        setInputText('#clubName', newClubName);
+        setInputText('#clubShortName', newClubShortName);
+
+        wrapper.find('#btnValidate').trigger('click');
+        await flushPromises();
+
+        expectInput('#clubName', newClubName);
+        expectInput('#clubShortName', newClubShortName);
+
+        const storeClub = store.getters.clubs.find((c: Club) => c.id === 1);
+
+        expect(storeClub.name).toEqual(newClubName);
+        expect(storeClub.shortName).toEqual(newClubShortName);
+        done();
+    });
+
+    const fs = require('fs')
+    const path = require('path')
+    const mime = require('mime-types')
+
+    const { JSDOM } = require('jsdom')
+    const { File, FileList } = (new JSDOM()).window
+
+
+    function addFileList(input: any, file_paths: any) {
+        if (typeof file_paths === 'string')
+            file_paths = [file_paths]
+        else if (!Array.isArray(file_paths)) {
+            throw new Error('file_paths needs to be a file path string or an Array of file path strings')
+        }
+
+        const file_list = file_paths.map((fp: any) => createFile(fp))
+        file_list.__proto__ = Object.create(FileList.prototype)
+
+        Object.defineProperty(input, 'files', {
+            value: file_list,
+            writable: false,
+        })
+
+        return input
+    }
+
+    function createFile(file_path: any) {
+        const { mtimeMs: lastModified } = fs.statSync(file_path)
+
+        return new File(
+            [new fs.readFileSync(file_path)],
+            path.basename(file_path),
+            {
+                lastModified,
+                type: mime.lookup(file_path) || '',
+            }
+        )
+    }
+
+    test('test set logo', async (done) => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+        await flushPromises();
+        router.push({path: '/club/1/general'});
+        await flushPromises();
+
+        const uploader = wrapper.find("#uploader").find('input');
+        addFileList(uploader.element, 'README.md');
+
+        uploader.trigger('change');
+        await flushPromises();
 
         done();
     });

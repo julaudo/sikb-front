@@ -39,51 +39,7 @@ describe('App.vue', () => {
             router,
             store,
         });
-        startjsonserver((server: any) => {
-            server.get('/users/logout', (req: any, res: any) => {
-                res.jsonp({});
-            });
-
-            server.post('/users/login', (req: any, res: any) => {
-                if (req.body.login === 'loginOK') {
-                    res.jsonp({
-                        access_token: 'ZWEyMDMyMDItNDFmMS00ZmI1LTllYWYtYjYxNDQ2N2MyMWZlMjAxOS0wNi0wN1QwNjoxNToyNC42MjZa',
-                        user: {
-                            id: 1,
-                            email: 'myEmail@kin-ball.fr',
-                            profile: {
-                                type: {
-                                    id: 1,
-                                    name: 'Administrator',
-                                    functionalities: [
-                                        'USER_READ',
-                                        'USER_CREATE',
-                                        'USER_UPDATE',
-                                        'USER_DELETE',
-                                        'CLUB_READ',
-                                        'CLUB_CREATE',
-                                        'CLUB_UPDATE',
-                                        'CLUB_DELETE',
-                                        'AFFILIATION_VALIDATE',
-                                        'PERSON_READ',
-                                        'PERSON_CREATE',
-                                        'PERSON_UPDATE',
-                                        'PERSON_DELETE',
-                                        'SEASON_READ',
-                                        'SEASON_CREATE',
-                                        'SEASON_UPDATE',
-                                        'SEASON_DELETE',
-                                    ],
-                                },
-                                clubIds: [],
-                            },
-                        },
-                    });
-                } else {
-                    res.status(500).jsonp({});
-                }
-            });
-        }, done);
+        startjsonserver(() => undefined, done);
     });
 
     afterEach(async (done) => {

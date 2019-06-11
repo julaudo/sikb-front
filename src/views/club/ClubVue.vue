@@ -28,7 +28,7 @@
                         </v-flex>
                         <v-flex xs12>
 
-                            <uploader style="float: right"
+                            <uploader id="uploader" style="float: right"
                                            accept = 'image/*'
                                            @input="onFileChange"></uploader>
 

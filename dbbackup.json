@@ -1,4 +1,120 @@
 {
+  "affiliations": [
+    {
+      "clubId": 12,
+      "season": {
+        "description": "Saison 2016/2017",
+        "begin": "2016-09-01",
+        "end": "2017-08-31",
+        "id": "20162017"
+      },
+      "affiliation": {
+        "prefectureNumber": "qsdq",
+        "prefectureCity": "dq",
+        "siretNumber": "qdq",
+        "address": "dqs",
+        "postalCode": "dqsd",
+        "city": "qds",
+        "phoneNumber": "0600998877",
+        "email": "qsdsq@qsdqs.fr",
+        "webSite": "",
+        "board": {
+          "president": {
+            "name": "sdf",
+            "sex": "MALE"
+          },
+          "secretary": {
+            "name": "sdsdf",
+            "sex": "MALE"
+          },
+          "treasurer": {
+            "name": "sfd",
+            "sex": "MALE"
+          },
+          "membersNumber": 2,
+          "electedDate": "2019-05-06"
+        },
+        "status": "TO_COMPLETE",
+        "id": 3
+      }
+    },
+    {
+      "clubId": 13,
+      "season": {
+        "description": "Saison 2016/2017",
+        "begin": "2016-09-01",
+        "end": "2017-08-31",
+        "id": "20162017"
+      },
+      "affiliation": {
+        "prefectureNumber": "qsdq",
+        "prefectureCity": "dq",
+        "siretNumber": "qdq",
+        "address": "dqs",
+        "postalCode": "dqsd",
+        "city": "qds",
+        "phoneNumber": "0600998877",
+        "email": "qsdsq@qsdqs.fr",
+        "webSite": "",
+        "board": {
+          "president": {
+            "name": "sdf",
+            "sex": "MALE"
+          },
+          "secretary": {
+            "name": "sdsdf",
+            "sex": "MALE"
+          },
+          "treasurer": {
+            "name": "sfd",
+            "sex": "MALE"
+          },
+          "membersNumber": 2,
+          "electedDate": "2019-05-06"
+        },
+        "status": "TO_COMPLETE",
+        "id": 3
+      }
+    },
+    {
+      "clubId": 12,
+      "season": {
+        "description": "Saison 2017/2018",
+        "begin": "2017-09-01",
+        "end": "2018-08-31",
+        "id": "20172018"
+      },
+      "affiliation": {
+        "prefectureNumber": "qsdq",
+        "prefectureCity": "dq",
+        "siretNumber": "qdq",
+        "address": "dqs",
+        "postalCode": "dqsd",
+        "city": "qds",
+        "phoneNumber": "0600998877",
+        "email": "qsdsq@qsdqs.fr",
+        "webSite": "",
+        "board": {
+          "president": {
+            "name": "sdf",
+            "sex": "MALE"
+          },
+          "secretary": {
+            "name": "sdsdf",
+            "sex": "MALE"
+          },
+          "treasurer": {
+            "name": "sfd",
+            "sex": "MALE"
+          },
+          "membersNumber": 2,
+          "electedDate": "2019-05-06"
+        },
+        "status": "TO_COMPLETE",
+        "id": 3
+      }
+    }
+  ],
   "clubs": [
     {
       "name": "Association Sportive Béarnaise de Kin-Ball",
@@ -492,5 +608,24 @@
       ]
     }
   ],
-  "seasons": [{"description":"Saison 2018/2019","begin":"2018-09-01","end":"2019-08-31","id":"20182019"},{"description":"Saison 2017/2018","begin":"2017-09-01","end":"2018-08-31","id":"20172018"}]
+  "seasons": [
+    {
+      "description": "Saison 2018/2019",
+      "begin": "2018-09-01",
+      "end": "2019-08-31",
+      "id": "20182019"
+    },
+    {
+      "description": "Saison 2017/2018",
+      "begin": "2017-09-01",
+      "end": "2018-08-31",
+      "id": "20172018"
+    },
+    {
+      "description": "Saison 2016/2017",
+      "begin": "2016-09-01",
+      "end": "2017-08-31",
+      "id": "20162017"
+    }
+  ]
 }
