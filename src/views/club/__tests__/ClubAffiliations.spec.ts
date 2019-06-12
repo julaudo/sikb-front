@@ -8,9 +8,9 @@ import i18n from '@/i18n';
 import store from '@/store/store';
 import {Sex} from '@/generated';
 import Router from 'vue-router';
-import {Features} from '@/model/model';
 import {flushPromises, initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
 import globalAxios from 'axios';
+import {createRouter} from '@/router';
 
 const testButton = (wrapper: any, disabled: boolean, name: string) => {
     const btn = wrapper.find(name);
@@ -43,41 +43,7 @@ describe('ClubAffiliations.vue', () => {
         Vue.use(Vuetify);
         Vue.use(Router);
 
-        router = new Router({
-            mode: 'hash',
-            base: process.env.BASE_URL,
-            routes: [
-                {
-                    path: '/',
-                    name: 'home',
-                    component: () => import( '../../Home.vue'),
-                },
-                {
-                    path: '/club/:clubId/affiliations',
-                    name: 'affiliations',
-                    component: () => import( '../../club/ClubAffiliations.vue'),
-                    meta: {
-                        icon: 'verified_user',
-                        features: [Features.CLUB_ADMIN],
-                    },
-                    children: [
-                        {
-                            path: ':seasonId',
-                            name: 'affiliation',
-                            component: () => import( '../../club/AffiliationVue.vue'),
-                            meta: {
-                                icon: 'verified_user',
-                                features: [Features.CLUB_ADMIN],
-                            },
-                        },
-                    ],
-                },
-                {
-                    path: '*',
-                    redirect: '/',
-                },
-            ],
-        });
+        router = createRouter();
 
         wrapper = mount(routerView, {
             stubs: {
@@ -107,7 +73,7 @@ describe('ClubAffiliations.vue', () => {
         expect(vm.affiliations.length).toEqual(2);
 
         wrapper.find('#btnAffiliationDelete').trigger('click');
-        await flushPromises()
+        await flushPromises();
         expect(vm.affiliations.length).toEqual(1);
         done();
     });

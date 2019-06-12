@@ -8,7 +8,7 @@ import store from '@/store/store';
 import globalAxios from 'axios';
 import {initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
 import Seasons from '@/views/crud/Seasons.vue';
-import {changed, decremented, incremented, testCreate, testDelete, testEdit} from './common';
+import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
 import {ConfigurationsApi, User, UsersApi} from '@/generated';
 
 
@@ -58,7 +58,7 @@ describe('Seasons.vue', () => {
     });
 
     const getData = async (id: any) => {
-        return (await new ConfigurationsApi().findSeasons('')).data.filter(s => s.id === id)[0].description;
+        return (await new ConfigurationsApi().findSeasons('')).data.filter((s) => s.id === id)[0].description;
     };
 
     test('edit season', async (done) => {

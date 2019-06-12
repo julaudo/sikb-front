@@ -1,4 +1,3 @@
-<script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import {AxiosPromise, AxiosResponse} from 'axios';
 import {ObjectWithId} from '@/model/model';
@@ -11,32 +10,32 @@ export default class CrudParent extends Vue {
     public headers: any[] = [];
     public items: ObjectWithId[] = [];
 
-    protected refreshing = false;
+    public refreshing = false;
 
     public created() {
         this.refreshItems();
     }
 
-    public getDeletePromise(id: number): AxiosPromise<Response> | undefined  {
-        return undefined;
+    public getDeletePromise(id: number): AxiosPromise<Response> {
+        return Promise.reject();
     }
 
-    public getCreatePromise(item: object): AxiosPromise<ObjectWithId> | undefined  {
-        return undefined;
+    public getCreatePromise(item: object): AxiosPromise<ObjectWithId> {
+        return Promise.reject();
     }
 
-    public getUpdatePromise(item: ObjectWithId): AxiosPromise | undefined  {
-        return undefined;
+    public getUpdatePromise(item: ObjectWithId): AxiosPromise  {
+        return Promise.reject();
     }
 
-    public getRefreshPromise(): AxiosPromise<ObjectWithId[]> | undefined {
-        return undefined;
+    public getRefreshPromise(): AxiosPromise<ObjectWithId[]> {
+        return Promise.reject();
     }
 
     public refreshItems() {
         this.refreshing = true;
         const promise = this.getRefreshPromise();
-        promise!.then((response: AxiosResponse<any[]>) => {
+        promise.then((response: AxiosResponse<any[]>) => {
             this.items = response.data;
             this.refreshing = false;
         }).catch(() => {
@@ -47,7 +46,7 @@ export default class CrudParent extends Vue {
     }
 
     public deleteItem(id: number, successCallback: any) {
-        this.getDeletePromise(id)!.then(() => {
+        this.getDeletePromise(id).then(() => {
             this.items = this.items.filter((c) => c.id !== id);
             successCallback(true);
         }).catch(() => {
@@ -56,7 +55,7 @@ export default class CrudParent extends Vue {
     }
 
     public updateItem(item: ObjectWithId, successCallback: any) {
-        this.getUpdatePromise(item)!.then(() => {
+        this.getUpdatePromise(item).then(() => {
             const index = this.items.findIndex((c) => c.id === item.id);
             Object.assign(this.items[index], item);
             successCallback(true);
@@ -66,7 +65,7 @@ export default class CrudParent extends Vue {
     }
 
     public createItem(item: object, successCallback: any) {
-        this.getCreatePromise(item)!.then((response: AxiosResponse) => {
+        this.getCreatePromise(item).then((response: AxiosResponse) => {
             this.items.push(response.data);
             successCallback(true);
         }).catch(() => {
@@ -74,4 +73,3 @@ export default class CrudParent extends Vue {
         });
     }
 }
-</script>

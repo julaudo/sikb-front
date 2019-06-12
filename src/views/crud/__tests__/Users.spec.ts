@@ -17,7 +17,7 @@ import {
     testCreate,
     testDelete,
     testEdit,
-} from './common';
+} from '@/test/common';
 import {UsersApi} from '@/generated';
 
 

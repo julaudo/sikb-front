@@ -12,6 +12,7 @@ module.exports = {
         '**/*.vue',
         '!**/*.d.ts',
         '!**/src/generated/**',
+        '!**/src/test/**',
     ],
     moduleDirectories: [
         'node_modules',

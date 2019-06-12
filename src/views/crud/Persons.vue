@@ -18,7 +18,7 @@ import {Person, PersonsApi} from '@/generated';
 import {AxiosPromise} from 'axios';
 import {baseOptions} from '@/utils/options';
 import {Mixins} from 'vue-property-decorator';
-import CrudParent from '@/views/crud/CrudParent.vue';
+import CrudParent from '@/views/crud/CrudParent.ts';
 import FieldType from '@/views/common/FieldType';
 import Validators from '@/utils/validators';
 import Crud from '@/views/common/Crud.vue';

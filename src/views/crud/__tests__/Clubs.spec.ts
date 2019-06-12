@@ -7,7 +7,7 @@ import i18n from '@/i18n';
 import store from '@/store/store';
 import globalAxios from 'axios';
 import {initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
-import {changed, decremented, incremented, testCreate, testDelete, testEdit} from './common';
+import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
 import {ClubsApi} from '@/generated';
 import Clubs from '@/views/crud/Clubs.vue';
 

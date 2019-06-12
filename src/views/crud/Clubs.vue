@@ -17,7 +17,7 @@ import Component from 'vue-class-component';
 import {Club, ClubsApi} from '@/generated';
 import {baseOptions} from '@/utils/options';
 import {AxiosPromise} from 'axios';
-import CrudParent from '@/views/crud/CrudParent.vue';
+import CrudParent from '@/views/crud/CrudParent.ts';
 import {Mixins} from 'vue-property-decorator';
 import FieldType from '@/views/common/FieldType';
 import Validators from '@/utils/validators';

@@ -59,9 +59,9 @@ export const startjsonserver = (init: (server: any) => void, done: any) => {
         server.use(jsonServer.bodyParser);
         server.use(middlewares);
 
-        server.use('/clubs/:clubId/seasons/:seasonId/affiliations', function (req: any, res: any) {
+        server.use('/clubs/:clubId/seasons/:seasonId/affiliations', (req: any, res: any) => {
             res.redirect('/clubs/:clubId/affiliations?season.id=:seasonId');
-        })
+        });
 
         initLogin(server);
         init(server);
