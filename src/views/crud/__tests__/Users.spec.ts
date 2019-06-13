@@ -7,7 +7,7 @@ import i18n from '@/i18n';
 import Users from '@/views/crud/Users.vue';
 import store from '@/store/store';
 import globalAxios from 'axios';
-import {initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
+import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
 import {
     changed,
     decremented,
@@ -112,10 +112,8 @@ describe('Users.vue', () => {
     });
 
     const setData = () => {
-        const mailInput = wrapper.find('#refDialog').findAll('input').at(0) as any;
-        const mail = 'test@mail.fr';
-        mailInput.element.value = mail;
-        mailInput.trigger('input');
+
+        setInputText(wrapper.find('#crud_email'), ' input', 'test@mail.fr');
 
         const select = wrapper.find('#refDialog').find('.v-select').vm as any;
         select.selectItem(1);

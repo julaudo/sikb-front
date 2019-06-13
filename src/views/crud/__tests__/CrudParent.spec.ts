@@ -17,7 +17,7 @@ describe('CrudParent.vue', () => {
         const crudParent = new CrudParent();
         crudParent.createItem({}, (result: boolean) => {
             expect(result).toBeFalsy();
-        })
+        });
         await flushPromises();
         done();
     });
@@ -26,7 +26,7 @@ describe('CrudParent.vue', () => {
         const crudParent = new CrudParent();
         crudParent.updateItem({}, (result: boolean) => {
             expect(result).toBeFalsy();
-        })
+        });
         await flushPromises();
         done();
     });
@@ -35,7 +35,7 @@ describe('CrudParent.vue', () => {
         const crudParent = new CrudParent();
         crudParent.deleteItem(0, (result: boolean) => {
             expect(result).toBeFalsy();
-        })
+        });
         await flushPromises();
         done();
     });

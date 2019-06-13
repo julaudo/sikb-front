@@ -127,3 +127,14 @@ export const flushPromises = async () => {
 
     await promise;
 };
+
+
+
+export const setInputText = (wrapper: any, selector: string, value: string) => {
+    wrapper.find(selector).element.value = value;
+    wrapper.find(selector).trigger('input');
+};
+
+export const expectInput = (wrapper: any, selector: string, value: string) => {
+    expect(wrapper.find(selector).element.value).toEqual(value);
+};

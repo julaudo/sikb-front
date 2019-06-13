@@ -7,8 +7,9 @@ import i18n from '@/i18n';
 import store from '@/store/store';
 import Router from 'vue-router';
 import {
+    expectInput,
     flushPromises,
-    initAxiosInterceptors,
+    initAxiosInterceptors, setInputText,
     startjsonserver,
     stopjsonserver,
 } from '@/test/utils';
@@ -49,15 +50,6 @@ describe('ClubVue.vue', () => {
         stopjsonserver(done);
     });
 
-    const setInputText = (selector: string, value: string) => {
-        wrapper.find(selector).element.value = value;
-        wrapper.find(selector).trigger('input');
-    };
-
-    const expectInput = (selector: string, value: string) => {
-        expect(wrapper.find(selector).element.value).toEqual(value);
-    };
-
     test('test reset', async (done) => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         await flushPromises();
@@ -70,14 +62,14 @@ describe('ClubVue.vue', () => {
         const newClubName = clubName + '_new';
         const newClubShortName = clubShortName + '_new';
 
-        setInputText('#clubName', newClubName);
-        setInputText('#clubShortName', newClubShortName);
+        setInputText(wrapper, '#clubName', newClubName);
+        setInputText(wrapper, '#clubShortName', newClubShortName);
 
         wrapper.find('#btnCancel').trigger('click');
         await flushPromises();
 
-        expectInput('#clubName', clubName);
-        expectInput('#clubShortName', clubShortName);
+        expectInput(wrapper, '#clubName', clubName);
+        expectInput(wrapper, '#clubShortName', clubShortName);
 
         done();
     });
@@ -94,14 +86,14 @@ describe('ClubVue.vue', () => {
         const newClubName = clubName + '_new';
         const newClubShortName = clubShortName + '_new';
 
-        setInputText('#clubName', newClubName);
-        setInputText('#clubShortName', newClubShortName);
+        setInputText(wrapper, '#clubName', newClubName);
+        setInputText(wrapper, '#clubShortName', newClubShortName);
 
         wrapper.find('#btnValidate').trigger('click');
         await flushPromises();
 
-        expectInput('#clubName', newClubName);
-        expectInput('#clubShortName', newClubShortName);
+        expectInput(wrapper, '#clubName', newClubName);
+        expectInput(wrapper, '#clubShortName', newClubShortName);
 
         const storeClub = store.getters.clubs.find((c: Club) => c.id === 1);
 

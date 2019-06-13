@@ -6,7 +6,7 @@ import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import store from '@/store/store';
 import globalAxios from 'axios';
-import {initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
+import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
 import Seasons from '@/views/crud/Seasons.vue';
 import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
 import {ConfigurationsApi, User, UsersApi} from '@/generated';
@@ -70,22 +70,9 @@ describe('Seasons.vue', () => {
     });
 
     const setData = () => {
-        const descInput = wrapper.find('#refDialog').findAll('input').at(0) as any;
-        const desc = 'test@mail.fr';
-        descInput.element.value = desc;
-        descInput.trigger('input');
-
-
-        const beginInput = wrapper.find('#refDialog').findAll('input').at(1) as any;
-        const begin = '01/01/1985';
-        beginInput.element.value = begin;
-        beginInput.trigger('input');
-
-
-        const endInput = wrapper.find('#refDialog').findAll('input').at(2) as any;
-        const end = '31/12/1985';
-        endInput.element.value = end;
-        endInput.trigger('input');
+        setInputText(wrapper.find('#crud_description'), ' input', 'description');
+        setInputText(wrapper.find('#crud_begin'), 'input', '01/01/1985');
+        setInputText(wrapper.find('#crud_end'), 'input', '31/12/1985');
     };
 
     test('create season', async (done) => {

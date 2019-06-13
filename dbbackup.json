@@ -627,5 +627,10 @@
       "end": "2017-08-31",
       "id": "20162017"
     }
+  ],
+  "persons": [
+    {"firstName":"Baschot","name":"Thierry","email":"thierry.baschot@kin-ball.fr","id":1},
+    {"firstName":"Karabatic","name":"Nikola","email":"nikola.karabatic@kin-ball.fr","id":2},
+    {"firstName":"Parker","name":"Tony","email":"tony.parker@kin-ball.fr","id":3}
   ]
 }

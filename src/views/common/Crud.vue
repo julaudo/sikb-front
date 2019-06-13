@@ -49,6 +49,7 @@
                                 <v-layout wrap>
                                     <v-flex v-for="header in propertyHeaders" v-bind:key="header.value" xs12 sm12 md12 style="padding:0px">
                                         <v-select
+                                                :id="getId(header)"
                                                 v-if="header.type === TYPE_LIST"
                                                 :value="resolveProperty(header.value, editedItem)"
                                                 @input="setProperty(header.value, editedItem, header.list.filter((e) => header.itemValue.print(e) === $event)[0])"
@@ -59,6 +60,7 @@
                                         ></v-select>
 
                                         <MultiEditor
+                                                :id="getId(header)"
                                                 v-if="header.type === TYPE_LIST_MULTI"
                                                 :value="resolveProperty(header.value, editedItem)"
                                                 :items="header.list"
@@ -70,13 +72,15 @@
                                         ></MultiEditor>
 
                                         <DateEditor
+                                                :id="getId(header)"
                                                 v-if="header.type === TYPE_DATE"
                                                 v-model="editedItem[header.value]"
                                                 :label="getFieldName(header)" />
                                         <v-text-field v-bind:prepend-icon="header.prepend_icon" v-if="!header.type"
-                                                      v-model="editedItem[header.value]"
-                                                      v-bind:label="getFieldName(header)"
-                                                      :rules="getValidators(header)">
+                                                :id="getId(header)"
+                                                v-model="editedItem[header.value]"
+                                                v-bind:label="getFieldName(header)"
+                                                :rules="getValidators(header)">
                                         </v-text-field>
                                     </v-flex>
                                 </v-layout>
@@ -372,6 +376,10 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
         }
 
         return Math.ceil(this.items.length / this.pagination.rowsPerPage);
+    }
+
+    private getId(header: any): string {
+        return 'crud_' + header.value;
     }
 
 }

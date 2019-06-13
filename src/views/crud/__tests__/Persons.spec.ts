@@ -8,11 +8,11 @@ import store from '@/store/store';
 import globalAxios from 'axios';
 import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
 import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
-import {ClubsApi} from '@/generated';
-import Clubs from '@/views/crud/Clubs.vue';
+import Persons from '@/views/crud/Persons.vue';
+import {PersonsApi} from '@/generated';
 
 
-describe('Clubs.vue', () => {
+describe('Persons.vue', () => {
     let wrapper: any;
 
     beforeEach((done) => {
@@ -29,11 +29,11 @@ describe('Clubs.vue', () => {
             features: [],
         };
 
-        Vue.component('Clubs', Clubs);
+        Vue.component('Persons', Persons);
 
 
         wrapper = mount(Vue.extend({
-            template: `<div data-app="true" class="application theme--light" id="app"><Clubs /></div>`,
+            template: `<div data-app="true" class="application theme--light" id="app"><Persons /></div>`,
         }), {
             attachToDocument: true,
             sync: false,
@@ -49,8 +49,8 @@ describe('Clubs.vue', () => {
         stopjsonserver(done);
     });
 
-    test('delete club', async (done) => {
-        await testDelete(Clubs, wrapper, () => {
+    test('delete person', async (done) => {
+        await testDelete(Persons, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
         }, decremented);
 
@@ -58,11 +58,11 @@ describe('Clubs.vue', () => {
     });
 
     const getData = async (id: any) => {
-        return (await new ClubsApi().getClubById('', id)).data.name;
+        return (await new PersonsApi().getPerson('', id)).data.name;
     };
 
-    test('edit club', async (done) => {
-        await testEdit(Clubs, wrapper, () => {
+    test('edit person', async (done) => {
+        await testEdit(Persons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, getData, changed);
 
@@ -71,11 +71,12 @@ describe('Clubs.vue', () => {
 
     const setData = () => {
         setInputText(wrapper.find('#crud_name'), ' input', 'name');
-        setInputText(wrapper.find('#crud_shortName'), 'input', 'shortName');
+        setInputText(wrapper.find('#crud_firstName'), 'input', 'last name');
+        setInputText(wrapper.find('#crud_email'), 'input', 'mail@mail.fr');
     };
 
-    test('create club', async (done) => {
-        await testCreate(Clubs, wrapper, () => {
+    test('create person', async (done) => {
+        await testCreate(Persons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);
 
