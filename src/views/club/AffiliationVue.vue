@@ -1,9 +1,18 @@
+import {AffiliationStatus} from "../../generated";
 <template style="height:100%">
 
     <v-form v-model="valid" style="height:100%">
         <v-card style="display: flex; flex-direction: column; height: 100%;">
             <v-container grid-list-md style="flex-shrink: 1;overflow-y: scroll;">
                 <v-layout row wrap>
+
+                    <v-flex xs12 sm12 md12>
+                        <v-alert
+                            :value="true"
+                            :type="getAlertType()">
+                            {{$t('affiliation.status.' + entity.status)}}
+                        </v-alert>
+                    </v-flex>
 
                     <v-flex xs12 sm6 md6>
                         <v-text-field
@@ -115,17 +124,17 @@
 </template>
 
 <script lang="ts">
-import {Component, Mixins, Prop} from 'vue-property-decorator';
-import Utils from '@/utils/utils';
-import Validators from '@/utils/validators';
-import BoardVue from '@/views/club/BoardVue.vue';
-import EntityForm from '@/views/generic/EntityForm';
-import {mixins} from 'vue-class-component';
-import {Affiliation, AffiliationsApi} from '@/generated';
-import {baseOptions} from '@/utils/options';
+    import {Component, Mixins, Prop} from 'vue-property-decorator';
+    import Utils from '@/utils/utils';
+    import Validators from '@/utils/validators';
+    import BoardVue from '@/views/club/BoardVue.vue';
+    import EntityForm from '@/views/generic/EntityForm';
+    import {mixins} from 'vue-class-component';
+    import {Affiliation, AffiliationForUpdate, AffiliationsApi, AffiliationStatus} from '@/generated';
+    import {baseOptions} from '@/utils/options';
 
 
-@Component({
+    @Component({
     components: {BoardVue},
 })
 export default class AffiliationVue extends Mixins(Utils, Validators, mixins<EntityForm<Affiliation>>(EntityForm)) {
@@ -158,24 +167,33 @@ export default class AffiliationVue extends Mixins(Utils, Validators, mixins<Ent
 
     private validate() {
         this.saving = true;
+
+        let promise;
         if (this.entity.id) {
-            new AffiliationsApi(baseOptions)
-                .updateAffiliation(this.userToken, this.clubId, this.seasonId, this.entity)
-                .then(() => {
-                    this.saving = false;
-                })
-                .catch(() => {
-                    this.saving = false;
-                });
+            promise = new AffiliationsApi(baseOptions)
+                .updateAffiliation(this.userToken, this.clubId, this.seasonId,
+                    {...this.entity, status: AffiliationStatus.SUBMITTED});
         } else {
-            new AffiliationsApi(baseOptions)
-                .createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity)
-                .then(() => {
-                    this.saving = false;
-                })
-                .catch(() => {
-                    this.saving = false;
-                });
+            promise = new AffiliationsApi(baseOptions)
+                .createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity);
+        }
+
+        promise.then(() => {
+                this.saving = false;
+            })
+            .catch(() => {
+                this.saving = false;
+            });
+    }
+
+    private getAlertType(): string {
+        switch (this.entity.status) {
+            case AffiliationStatus.SUBMITTED:
+                return 'info';
+            case AffiliationStatus.TOCOMPLETE:
+                return 'warning';
+            case AffiliationStatus.VALIDATED:
+                return 'success';
         }
     }
 }
