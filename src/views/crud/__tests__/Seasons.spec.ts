@@ -26,7 +26,7 @@ describe('Seasons.vue', () => {
             token: '',
             profile: '',
             clubs: [],
-            features: [],
+            functionalities: [],
         };
 
         Vue.component('Seasons', Seasons);

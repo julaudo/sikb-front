@@ -59,7 +59,6 @@ import Axios from 'axios';
 import NProgress from 'nprogress';
 import router from '@/router';
 import {Route} from 'vue-router';
-import {Features} from '@/model/model';
 import store from '@/store/store';
 
 
@@ -102,7 +101,7 @@ export default class App extends Vue {
       // TODO check /club access
       if (to.meta
               && to.meta.features
-              && to.meta.features.filter((f: Features) => store.getters.features.indexOf(f) !== -1).length === 0) {
+              && to.meta.features.filter((f: string) => store.getters.features.indexOf(f) !== -1).length === 0) {
         next(false);
         this.decrementCount();
       } else {

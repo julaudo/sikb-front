@@ -1,3 +1,4 @@
+import {Features} from "../../model/model";
 import {AffiliationStatus} from "../../generated";
 <template style="height:100%">
 
@@ -6,11 +7,24 @@ import {AffiliationStatus} from "../../generated";
             <v-container grid-list-md style="flex-shrink: 1;overflow-y: scroll;">
                 <v-layout row wrap>
 
+                    <v-btn v-if="canValidate()"
+                            color="success"
+                    >
+                        Valider
+                        <v-icon right dark>fa fa-check</v-icon>
+                    </v-btn>
+                    <v-btn v-if="canValidate()"
+                            color="error"
+                    >
+                        Rejecter
+                        <v-icon right dark>fa fa-times</v-icon>
+                    </v-btn>
                     <v-flex xs12 sm12 md12>
                         <v-alert
                             :value="true"
                             :type="getAlertType()">
                             {{$t('affiliation.status.' + entity.status)}}
+
                         </v-alert>
                     </v-flex>
 
@@ -124,20 +138,22 @@ import {AffiliationStatus} from "../../generated";
 </template>
 
 <script lang="ts">
-    import {Component, Mixins, Prop} from 'vue-property-decorator';
-    import Utils from '@/utils/utils';
-    import Validators from '@/utils/validators';
-    import BoardVue from '@/views/club/BoardVue.vue';
-    import EntityForm from '@/views/generic/EntityForm';
-    import {mixins} from 'vue-class-component';
-    import {Affiliation, AffiliationForUpdate, AffiliationsApi, AffiliationStatus} from '@/generated';
-    import {baseOptions} from '@/utils/options';
+import {Component, Mixins, Prop} from 'vue-property-decorator';
+import Utils from '@/utils/utils';
+import Validators from '@/utils/validators';
+import BoardVue from '@/views/club/BoardVue.vue';
+import EntityForm from '@/views/generic/EntityForm';
+import {mixins} from 'vue-class-component';
+import {Affiliation, AffiliationsApi, AffiliationStatus, Functionality} from '@/generated';
+import {baseOptions} from '@/utils/options';
+import {Getter} from 'vuex-class';
 
 
-    @Component({
+@Component({
     components: {BoardVue},
 })
 export default class AffiliationVue extends Mixins(Utils, Validators, mixins<EntityForm<Affiliation>>(EntityForm)) {
+    @Getter public features!: string[];
     @Prop() public clubId!: number;
     @Prop() public seasonId!: string;
 
@@ -195,6 +211,11 @@ export default class AffiliationVue extends Mixins(Utils, Validators, mixins<Ent
             case AffiliationStatus.VALIDATED:
                 return 'success';
         }
+    }
+
+    private canValidate(): boolean {
+        return this.entity.status === AffiliationStatus.SUBMITTED
+            && this.features.includes(Functionality.AFFILIATIONVALIDATE);
     }
 }
 </script>

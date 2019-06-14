@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router, {RouteConfig} from 'vue-router';
 import SimpleView from '@/views/layout/SimpleView.vue';
-import {Features} from '@/model/model';
+import {Functionality} from '@/generated';
 
 Vue.use(Router);
 
@@ -13,7 +13,7 @@ export const adminRoutes = [
     name: 'persons',
     component: () => import( './views/crud/Persons.vue'),
     meta: {
-      features: [Features.ADMIN],
+      features: [Functionality.PERSONREAD],
     },
   },
   {
@@ -21,7 +21,7 @@ export const adminRoutes = [
     name: 'seasons',
     component: () => import( './views/crud/Seasons.vue'),
     meta: {
-      features: [Features.ADMIN],
+      features: [Functionality.SEASONREAD],
     },
   },
   {
@@ -29,7 +29,7 @@ export const adminRoutes = [
     name: 'clubs',
     component: () => import( './views/crud/Clubs.vue'),
     meta: {
-      features: [Features.ADMIN],
+      features: [Functionality.CLUBREAD],
     },
   },
   {
@@ -37,7 +37,7 @@ export const adminRoutes = [
     name: 'users',
     component: () => import( './views/crud/Users.vue'),
     meta: {
-      features: [Features.ADMIN],
+      features: [Functionality.USERREAD],
     },
   },
 ];
@@ -58,7 +58,6 @@ export const subRoutes: RouteConfig[] = [
     children: adminRoutes,
     meta: {
       icon: 'verified_user',
-      features: [Features.ADMIN],
     },
   },
   {
@@ -67,7 +66,6 @@ export const subRoutes: RouteConfig[] = [
     component: SimpleView,
     meta: {
       icon: 'verified_user',
-      features: [Features.CLUB_ADMIN],
     },
     children: [
       {
@@ -76,7 +74,6 @@ export const subRoutes: RouteConfig[] = [
         component: () => import( './views/club/ClubVue.vue'),
         meta: {
           icon: 'verified_user',
-          features: [Features.CLUB_ADMIN],
         },
       },
       {
@@ -85,7 +82,6 @@ export const subRoutes: RouteConfig[] = [
         component: () => import( './views/club/ClubAffiliations.vue'),
         meta: {
           icon: 'verified_user',
-          features: [Features.CLUB_ADMIN],
         },
         children: [
           {
@@ -94,7 +90,6 @@ export const subRoutes: RouteConfig[] = [
             component: () => import( './views/club/AffiliationVue.vue'),
             meta: {
               icon: 'verified_user',
-              features: [Features.CLUB_ADMIN],
             },
           },
         ],

@@ -29,7 +29,7 @@
                                 </v-list-tile>
                             </template>
                             <v-list-tile
-                                    v-for="child in item.children"
+                                    v-for="child in getChildren(item)"
                                     :key="child.name"
 
                                     :to="item.path + '/' + child.path"
@@ -81,18 +81,16 @@
 <script lang="ts">
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Logger} from '../../utils/logger';
 import * as router from '../../router';
 import {Getter} from 'vuex-class';
 import {Club} from '@/generated';
 import {ROUTE_CLUB} from '@/router';
-import {Features} from '@/model/model';
 import {RouteConfig} from 'vue-router';
 
 @Component
 export default class Navigation extends Vue {
 
-    @Getter public features!: Features[];
+    @Getter public features!: string[];
     @Getter public userLogin!: string;
     @Getter public clubs!: Club[];
     private drawer = null;
@@ -106,9 +104,22 @@ export default class Navigation extends Vue {
     }
 
     private canAccess(route: RouteConfig): boolean {
-        return !route.meta
-            || !route.meta.features
-            || route.meta.features.filter((f: Features) => this.features.indexOf(f) !== -1).length > 0;
+        if (route.meta
+            && route.meta.features
+            && route.meta.features.filter((f: string) => this.features.includes(f)).length === 0) {
+            return false;
+        }
+
+        // Don't show empty menus
+        if (route.children && route.children.length  > 0 && this.getChildren(route).length === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private getChildren(route: RouteConfig) {
+        return route.children ? route.children.filter((c: RouteConfig) => this.canAccess(c)) : [];
     }
 
     get items() {

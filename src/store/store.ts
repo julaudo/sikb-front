@@ -5,6 +5,7 @@ import {
   ClubsApi,
   ConfigurationsApi,
   Credentials,
+  Functionality,
   IdentificationsApi,
   ProfileType,
   Season,
@@ -13,7 +14,6 @@ import {
 import {AxiosPromise, AxiosResponse} from 'axios';
 import {UserInfo} from '@/store/UserInfo';
 import createPersistedState from 'vuex-persistedstate';
-import {Features} from '@/model/model';
 import {baseOptions} from '@/utils/options';
 
 Vue.use(Vuex);
@@ -30,7 +30,7 @@ const getters = {
   userLogin: (s: State) => s.userInfo!.login,
   userToken: (s: State) => s.userInfo!.token,
   clubs: (s: State) => s.userInfo!.clubs || [],
-  features: (s: State) => s.userInfo!.features || [],
+  features: (s: State) => s.userInfo!.functionalities || [],
   profile: (s: State) => s.userInfo!.profile,
   profiles: (s: State) => s.profiles || [],
   seasons: (s: State) => new Map( // Look Ma!  No type annotations
@@ -86,15 +86,15 @@ const store = new Vuex.Store({
             login: credentials.login,
             profile: '',
             clubs: [],
-            features: []};
+            functionalities: []};
 
           const promises: AxiosPromise[] = [];
           const clubsIds = [];
 
           if (userInfo.login.startsWith('admin')) {
-            userInfo.features.push(Features.ADMIN);
+            Object.keys(Functionality).forEach((f) => userInfo.functionalities.push(f));
           } else {
-            userInfo.features.push(Features.CLUB_ADMIN);
+            userInfo.functionalities.push(Functionality.CLUBCREATE);
             clubsIds.push(1);
           }
 

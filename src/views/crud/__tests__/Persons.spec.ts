@@ -26,7 +26,7 @@ describe('Persons.vue', () => {
             token: '',
             profile: '',
             clubs: [],
-            features: [],
+            functionalities: [],
         };
 
         Vue.component('Persons', Persons);
