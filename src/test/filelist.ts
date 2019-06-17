@@ -7,6 +7,20 @@ const { JSDOM } = require('jsdom');
 const { File, FileList } = (new JSDOM()).window;
 
 
+function createFile(filePath: any) {
+    const { mtimeMs: lastModified } = fs.statSync(filePath);
+
+    return new File(
+        [new fs.readFileSync(filePath)],
+        path.basename(filePath),
+        {
+            lastModified,
+            type: mime.lookup(filePath) || '',
+        },
+    );
+}
+
+
 export function addFileList(input: any, filePaths: any) {
     if (typeof filePaths === 'string') {
         filePaths = [filePaths];
@@ -23,17 +37,4 @@ export function addFileList(input: any, filePaths: any) {
     });
 
     return input;
-}
-
-function createFile(filePath: any) {
-    const { mtimeMs: lastModified } = fs.statSync(filePath);
-
-    return new File(
-        [new fs.readFileSync(filePath)],
-        path.basename(filePath),
-        {
-            lastModified,
-            type: mime.lookup(filePath) || '',
-        },
-    );
 }
