@@ -19,7 +19,7 @@ export const testDelete = async (component: any, wrapper: Wrapper<any>, action: 
 
     const columns = rows.at(0).findAll('td');
 
-    const deleteIndex = vm.headers.findIndex((h: any) => h.value === 'delete');
+    const deleteIndex = crud.visibleHeaders.findIndex((h: any) => h.value === 'delete');
     columns.at(deleteIndex).find('i').trigger('click');
 
     expect(crud.deleteDialog).toBeTruthy();

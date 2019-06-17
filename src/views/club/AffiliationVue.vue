@@ -1,35 +1,67 @@
+import {AffiliationStatus} from "../../generated";
+import {AffiliationStatus} from "../../generated";
 import {Features} from "../../model/model";
 import {AffiliationStatus} from "../../generated";
 <template style="height:100%">
 
     <v-form v-model="valid" style="height:100%">
+
+        <Dialog v-model="deleteDialog"
+                :title="$t('crud.confirmDelete')"
+                :buttons="deleteButtons">
+        </Dialog>
+
         <v-card style="display: flex; flex-direction: column; height: 100%;">
             <v-container grid-list-md style="flex-shrink: 1;overflow-y: scroll;">
+
+                <v-stepper alt-labels style="box-shadow: none"  v-model="currentStep">
+                    <v-stepper-header>
+                        <v-stepper-step :complete="currentStep > 1" step="1">{{$t('affiliation.status.TO_COMPLETE')}}</v-stepper-step>
+
+                        <v-divider></v-divider>
+
+                        <v-stepper-step :complete="currentStep > 2" step="2">{{$t('affiliation.status.SUBMITTED')}}</v-stepper-step>
+
+                        <v-divider></v-divider>
+
+                        <v-stepper-step :complete="currentStep > 3" step="3">{{$t('affiliation.status.VALIDATED')}}</v-stepper-step>
+                    </v-stepper-header>
+                </v-stepper>
+
+                <div style="display: flex; flex-direction: row; justify-content: center ">
+                    <v-btn id="btnAffiliationValidate" v-if="canValidate()"
+                           color="success"
+                           :disabled="!valid"
+                           :loading="saving"
+                           @click="validate"
+                    >
+                        {{$t("validate")}}
+                    </v-btn>
+
+                    <v-btn id="btnAffiliationReject" v-if="canReject()"
+                           color="error"
+                           :disabled="!valid"
+                           :loading="saving"
+                           @click="reject"
+                    >
+                        {{$t("reject")}}
+                    </v-btn>
+
+                    <v-btn id="btnAffiliationSubmit" v-if="canSubmit()"
+                           color="success"
+                           :disabled="!valid"
+                           :loading="saving"
+                           @click="submit"
+                    >
+                        {{$t("submit")}}
+                    </v-btn>
+                </div>
+
                 <v-layout row wrap>
-
-                    <v-btn v-if="canValidate()"
-                            color="success"
-                    >
-                        Valider
-                        <v-icon right dark>fa fa-check</v-icon>
-                    </v-btn>
-                    <v-btn v-if="canValidate()"
-                            color="error"
-                    >
-                        Rejecter
-                        <v-icon right dark>fa fa-times</v-icon>
-                    </v-btn>
-                    <v-flex xs12 sm12 md12>
-                        <v-alert
-                            :value="true"
-                            :type="getAlertType()">
-                            {{$t('affiliation.status.' + entity.status)}}
-
-                        </v-alert>
-                    </v-flex>
 
                     <v-flex xs12 sm6 md6>
                         <v-text-field
+                                id="prefectureCity"
                                 v-model="entity.prefectureCity"
                                 :label="$t('affiliation.prefectureCity')"
                                 :rules="[required()]"
@@ -108,27 +140,19 @@ import {AffiliationStatus} from "../../generated";
                 <v-spacer></v-spacer>
 
                 <v-btn id="btnAffiliationCancel"
-                        :disabled="cancelDisabled() && !isCreation()"
-                        flat color="blue darken-1"
-                        @click="cancel"
+                       v-if="isCreation() || isDirty()"
+                       flat color="primary"
+                       @click="cancel"
                 >
                     {{$t("cancel")}}
                 </v-btn>
 
-                <v-btn id="btnAffiliationValidate"
-                        :loading="saving"
-                        :disabled="validateDisabled()"
-                        flat color="blue darken-1"
-                        @click="validate"
-                >
-                    {{$t("validate")}}
-                </v-btn>
+
 
                 <v-btn id="btnAffiliationDelete"
-                        :disabled="isCreation()"
-                        :loading="deleting"
-                        flat color="blue darken-1"
-                        @click="deleteAffiliation()"
+                       v-if="canDelete() && !isCreation()"
+                       flat color="primary"
+                       @click="deleteDialog = true"
                 >
                     {{$t("delete")}}
                 </v-btn>
@@ -147,15 +171,24 @@ import {mixins} from 'vue-class-component';
 import {Affiliation, AffiliationsApi, AffiliationStatus, Functionality} from '@/generated';
 import {baseOptions} from '@/utils/options';
 import {Getter} from 'vuex-class';
+import {AxiosResponse} from 'axios';
+import {DialogButton} from '@/views/common/DialogButton';
+import Dialog from '@/views/common/Dialog.vue';
 
 
 @Component({
-    components: {BoardVue},
+components: {BoardVue, Dialog},
 })
 export default class AffiliationVue extends Mixins(Utils, Validators, mixins<EntityForm<Affiliation>>(EntityForm)) {
     @Getter public features!: string[];
     @Prop() public clubId!: number;
     @Prop() public seasonId!: string;
+
+    private deleteDialog = false;
+    private deleteButtons = [
+        new DialogButton('no', 'refDeleteDialogNo', () => Promise.resolve()),
+        new DialogButton('yes', 'refDeleteDialogYes', this.onDeleteAffiliation),
+    ];
 
     protected isCreation() {
         return !this.entity.id ;
@@ -169,53 +202,82 @@ export default class AffiliationVue extends Mixins(Utils, Validators, mixins<Ent
         }
     }
 
-    protected deleteAffiliation() {
-        this.deleting = true;
-        new AffiliationsApi(baseOptions).deleteAffiliation(this.userToken, this.clubId, this.seasonId)
-            .then(() => {
-                this.deleting = false;
-                this.$emit('cancel', this.seasonId);
-            })
-            .catch(() => {
-                this.deleting = false;
-            });
+    private onDeleteAffiliation(): Promise<AxiosResponse> {
+        const promise = new AffiliationsApi(baseOptions).deleteAffiliation(this.userToken, this.clubId, this.seasonId);
+
+        promise.then(() => {
+            this.$emit('cancel', this.seasonId);
+        });
+
+        return promise;
     }
 
-    private validate() {
+    private save(status: AffiliationStatus) {
         this.saving = true;
 
         let promise;
         if (this.entity.id) {
             promise = new AffiliationsApi(baseOptions)
                 .updateAffiliation(this.userToken, this.clubId, this.seasonId,
-                    {...this.entity, status: AffiliationStatus.SUBMITTED});
+                    {...this.entity, status});
         } else {
             promise = new AffiliationsApi(baseOptions)
-                .createAffiliation(this.userToken, this.clubId, this.seasonId, this.entity);
+                .createAffiliation(this.userToken, this.clubId, this.seasonId, {...this.entity, status : AffiliationStatus.SUBMITTED});
         }
 
-        promise.then(() => {
-                this.saving = false;
-            })
-            .catch(() => {
-                this.saving = false;
-            });
+        promise.then((response: AxiosResponse<Affiliation>) => {
+            this.copy(response.data, this.entityBackup);
+            this.copy(response.data, this.entity);
+            this.saving = false;
+        }).catch(() => {
+            this.saving = false;
+        });
     }
 
-    private getAlertType(): string {
-        switch (this.entity.status) {
-            case AffiliationStatus.SUBMITTED:
-                return 'info';
-            case AffiliationStatus.TOCOMPLETE:
-                return 'warning';
-            case AffiliationStatus.VALIDATED:
-                return 'success';
-        }
+    private submit() {
+        this.save(AffiliationStatus.SUBMITTED);
+    }
+
+    private validate() {
+        this.save(AffiliationStatus.VALIDATED);
+    }
+
+    private reject() {
+        this.save(AffiliationStatus.TOCOMPLETE);
     }
 
     private canValidate(): boolean {
         return this.entity.status === AffiliationStatus.SUBMITTED
             && this.features.includes(Functionality.AFFILIATIONVALIDATE);
+    }
+
+    private canReject(): boolean {
+        return this.entity.status === AffiliationStatus.SUBMITTED
+            && this.features.includes(Functionality.AFFILIATIONREJECT);
+    }
+
+    private canDelete(): boolean {
+        return this.features.includes(Functionality.AFFILIATIONDELETE);
+    }
+
+    private canSubmit(): boolean {
+        return this.entity.status === AffiliationStatus.TOCOMPLETE
+            && this.features.includes(Functionality.AFFILIATIONCREATE);
+    }
+
+    private get currentStep(): number {
+        switch (this.entity.status) {
+            case AffiliationStatus.TOCOMPLETE:
+                return 1;
+            case AffiliationStatus.SUBMITTED:
+                return 2;
+            case AffiliationStatus.VALIDATED:
+                return 3;
+        }
+    }
+
+    private set currentStep(step: number) {
+        // Empty setter, step is never set directly
     }
 }
 </script>

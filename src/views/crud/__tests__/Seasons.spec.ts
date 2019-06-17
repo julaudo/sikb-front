@@ -9,7 +9,7 @@ import globalAxios from 'axios';
 import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
 import Seasons from '@/views/crud/Seasons.vue';
 import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
-import {ConfigurationsApi, User, UsersApi} from '@/generated';
+import {ConfigurationsApi, Functionality, User, UsersApi} from '@/generated';
 
 
 describe('Seasons.vue', () => {
@@ -24,7 +24,6 @@ describe('Seasons.vue', () => {
         store.state.userInfo = {
             login: '',
             token: '',
-            profile: '',
             clubs: [],
             functionalities: [],
         };
@@ -50,6 +49,7 @@ describe('Seasons.vue', () => {
     });
 
     test('delete season', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.SEASONDELETE];
         await testDelete(Seasons, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
         }, decremented);
@@ -62,6 +62,7 @@ describe('Seasons.vue', () => {
     };
 
     test('edit season', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.SEASONUPDATE];
         await testEdit(Seasons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, getData, changed);
@@ -76,6 +77,7 @@ describe('Seasons.vue', () => {
     };
 
     test('create season', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.SEASONCREATE];
         await testCreate(Seasons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);

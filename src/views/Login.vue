@@ -44,7 +44,6 @@
 <script lang="ts">
     import Component from 'vue-class-component';
     import {Credentials} from '@/generated';
-    import {Logger} from '@/utils/logger';
     import {Mixins, Watch} from 'vue-property-decorator';
     import Validators from '@/utils/validators';
     import {Getter} from 'vuex-class';

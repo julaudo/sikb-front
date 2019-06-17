@@ -1,6 +1,7 @@
 {
   "affiliations": [
     {
+      "id": "12_20162017",
       "clubId": 12,
       "season": {
         "description": "Saison 2016/2017",
@@ -39,6 +40,7 @@
       }
     },
     {
+      "id": "13_20162017",
       "clubId": 13,
       "season": {
         "description": "Saison 2016/2017",
@@ -77,6 +79,7 @@
       }
     },
     {
+      "id": "12_20172018",
       "clubId": 12,
       "season": {
         "description": "Saison 2017/2018",

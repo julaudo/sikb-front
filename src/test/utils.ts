@@ -1,3 +1,5 @@
+import {Functionality} from '@/generated';
+
 let httpServer: any = null;
 let requests = 0;
 let interceptors = false;
@@ -19,27 +21,9 @@ function initLogin(server: any) {
                         type: {
                             id: 1,
                             name: 'Administrator',
-                            functionalities: [
-                                'USER_READ',
-                                'USER_CREATE',
-                                'USER_UPDATE',
-                                'USER_DELETE',
-                                'CLUB_READ',
-                                'CLUB_CREATE',
-                                'CLUB_UPDATE',
-                                'CLUB_DELETE',
-                                'AFFILIATION_VALIDATE',
-                                'PERSON_READ',
-                                'PERSON_CREATE',
-                                'PERSON_UPDATE',
-                                'PERSON_DELETE',
-                                'SEASON_READ',
-                                'SEASON_CREATE',
-                                'SEASON_UPDATE',
-                                'SEASON_DELETE',
-                            ],
+                            functionalities: Object.values(Functionality),
                         },
-                        clubIds: [],
+                        clubIds: [1],
                     },
                 },
             });
@@ -59,8 +43,10 @@ export const startjsonserver = (init: (server: any) => void, done: any) => {
         server.use(jsonServer.bodyParser);
         server.use(middlewares);
 
+
+
         server.use('/clubs/:clubId/seasons/:seasonId/affiliations', (req: any, res: any) => {
-            res.redirect('/clubs/:clubId/affiliations?season.id=:seasonId');
+            res.redirect(307, '/affiliations/' + req.params.clubId + '_' + req.params.seasonId);
         });
 
         initLogin(server);

@@ -6,30 +6,54 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import store from '@/store/store';
-import {Sex} from '@/generated';
+import {AffiliationsApi, AffiliationStatus, Sex} from '@/generated';
 import Router from 'vue-router';
-import {flushPromises, initAxiosInterceptors, startjsonserver, stopjsonserver} from '@/test/utils';
+import {
+    flushPromises,
+    initAxiosInterceptors,
+    setInputText,
+    startjsonserver,
+    stopjsonserver,
+} from '@/test/utils';
 import globalAxios from 'axios';
 import {createRouter} from '@/router';
+import AffiliationVue from '@/views/club/AffiliationVue.vue';
 
-const testButton = (wrapper: any, disabled: boolean, name: string) => {
-    const btn = wrapper.find(name);
-    expect(btn).toBeTruthy();
-    if (disabled) {
-        expect(btn.classes()).toContain('v-btn--disabled');
-    } else {
+
+let wrapper: any;
+
+const getCurrentAffiliationView = () => {
+    return wrapper.findAll(AffiliationVue).filter((c: any) => c.isVisible()).at(0);
+};
+
+const testButton = (button: boolean | null, name: string) => {
+    // There is one AffiliationVue per tab, we need to find the active one
+    const btn = getCurrentAffiliationView().find(name);
+
+    if (button === null) {
+        expect(btn.exists()).toBe(false);
+    } else  if (button) {
+        expect(btn.exists()).toBe(true);
         expect(btn.classes()).not.toContain('v-btn--disabled');
+    } else {
+        expect(btn.exists()).toBe(true);
+        expect(btn.classes()).toContain('v-btn--disabled');
     }
 };
 
-const testButtons = (wrapper: any, cancelDisabled: boolean, validateDisabled: boolean, deleteDisabled: boolean) => {
-    testButton(wrapper, cancelDisabled, '#btnAffiliationCancel');
-    testButton(wrapper, validateDisabled, '#btnAffiliationValidate');
-    testButton(wrapper, deleteDisabled, '#btnAffiliationDelete');
+const testButtons = (cancelButton: boolean | null,
+                     submitButton: boolean | null,
+                     deleteButton: boolean | null,
+                     validateButton: boolean | null,
+                     rejectButton: boolean | null) => {
+    testButton(cancelButton, '#btnAffiliationCancel');
+    testButton(submitButton, '#btnAffiliationSubmit');
+    testButton(deleteButton, '#btnAffiliationDelete');
+    testButton(validateButton, '#btnAffiliationValidate');
+    testButton(rejectButton, '#btnAffiliationReject');
 };
 
 describe('ClubAffiliations.vue', () => {
-    let wrapper: any;
 
     const routerView = Vue.extend({
         template: `<router-view />`,
@@ -49,6 +73,7 @@ describe('ClubAffiliations.vue', () => {
             stubs: {
                 'v-menu': true,
             },
+            attachToDocument: true,
             sync: true,
             i18n,
             router,
@@ -63,68 +88,56 @@ describe('ClubAffiliations.vue', () => {
         stopjsonserver(done);
     });
 
-    test('test delete', async (done) => {
-        await store.dispatch('Login', {login: 'loginOK', password: ''});
-        router.push('/club/12/affiliations');
-        await flushPromises();
-
-        expect(router.currentRoute.fullPath).toEqual('/club/12/affiliations/20172018');
-        const vm = wrapper.find(ClubAffiliations).vm;
-        expect(vm.affiliations.length).toEqual(2);
-
-        wrapper.find('#btnAffiliationDelete').trigger('click');
-        await flushPromises();
-        expect(vm.affiliations.length).toEqual(1);
-        done();
-    });
-
     test('test routes', async (done) => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         router.push('/club/12/affiliations');
         await flushPromises();
 
+        // 20172018 : affiliation existante TO_COMPLETE
         expect(router.currentRoute.fullPath).toEqual('/club/12/affiliations/20172018');
         const vm = wrapper.find(ClubAffiliations).vm;
         expect(vm.affiliations.length).toEqual(2);
         expect(vm.active).toEqual('20172018');
-        testButtons(wrapper, true, true, false);
+        testButtons(null, true, true, null, null);
 
 
+        // 20162017 : affiliation existante TO_COMPLETE
         router.push('/club/12/affiliations/20162017');
         await flushPromises();
         expect(vm.affiliations.length).toEqual(2);
         expect(vm.active).toEqual('20162017');
-        testButtons(wrapper, true, true, false);
+        testButtons(null, true, true, null, null);
 
-        // Ajout saison puis annulation
+        // Ajout saison
         router.push('/club/12/affiliations/20182019');
         await flushPromises();
         expect(vm.affiliations.length).toEqual(3);
         expect(vm.active).toEqual('20182019');
-        testButtons(wrapper, false, true, true);
+        testButtons(true, false, null, null, null);
 
+        // Annulation création
         wrapper.find('#btnAffiliationCancel').trigger('click');
         await flushPromises();
         expect(vm.affiliations.length).toEqual(2);
-        testButtons(wrapper, true, true, false);
+        testButtons(null, true, true, null, null);
 
         // Ajout saison inexistante
         router.push('/club/12/affiliations/20202021');
         await flushPromises();
         expect(vm.affiliations.length).toEqual(2);
-        testButtons(wrapper, true, true, false);
+        testButtons(null, true, true, null, null);
 
-        // Changement club
+        // Changement club, affiliation existante TO_COMPLETE
         router.push('/club/13/affiliations/20162017');
         await flushPromises();
         expect(vm.affiliations.length).toEqual(1);
         expect(vm.active).toEqual('20162017');
-        testButtons(wrapper, true, true, false);
+        testButtons(null, true, true, null, null);
 
         // Affiliation pour la saison en cours
         vm.affiliateForSeasonAndSetRouteFromExisting(vm.currentSeason);
         expect(vm.affiliations.length).toEqual(2);
-        testButtons(wrapper, false, true, true);
+        testButtons(true, false, null, null, null);
 
 
         // Changement de club + création affiliation
@@ -132,7 +145,7 @@ describe('ClubAffiliations.vue', () => {
         await flushPromises();
         expect(vm.affiliations.length).toEqual(1);
         expect(vm.active).toEqual('20162017');
-        testButtons(wrapper, false, true, true);
+        testButtons(true, false, null, null, null);
 
         // Annulation
         wrapper.find('#btnAffiliationCancel').trigger('click');
@@ -145,14 +158,15 @@ describe('ClubAffiliations.vue', () => {
         await flushPromises();
         expect(vm.affiliations.length).toEqual(1);
         expect(vm.active).toEqual('20162017');
-        testButtons(wrapper, false, true, true);
+        testButtons(true, false, null, null, null);
 
+        // Remplissage avec des données valides
         vm.affiliations[0].affiliation = {
             address: 'address',
             board: {
                 electedDate: '2018-01-01',
-                    membersNumber: 2,
-                    president: {name: 'president', sex: Sex.MALE},
+                membersNumber: 2,
+                president: {name: 'president', sex: Sex.MALE},
                 secretary: {name: 'secretary', sex: Sex.MALE},
                 treasurer: {name: 'treasurer', sex: Sex.MALE},
             },
@@ -164,14 +178,87 @@ describe('ClubAffiliations.vue', () => {
             prefectureNumber: 'prefectureNumber',
             siretNumber: 'siretNumber',
             webSite: 'webSite',
+            status: AffiliationStatus.TOCOMPLETE,
         };
         await flushPromises();
-        testButtons(wrapper, false, false, true);
-
-
-        wrapper.find('#btnAffiliationValidate').trigger('click');
+        testButtons(true, true, null, null, null);
 
         done();
 
+    });
+
+    test('test delete', async (done) => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+        router.push('/club/12/affiliations');
+        await flushPromises();
+
+        expect(router.currentRoute.fullPath).toEqual('/club/12/affiliations/20172018');
+        const vm = wrapper.find(ClubAffiliations).vm;
+        expect(vm.affiliations.length).toEqual(2);
+
+        getCurrentAffiliationView().find('#btnAffiliationDelete').trigger('click');
+        await flushPromises();
+        expect(vm.affiliations.length).toEqual(2);
+
+        getCurrentAffiliationView().find('#refDeleteDialogYes').trigger('click');
+        await flushPromises();
+        expect(vm.affiliations.length).toEqual(1);
+
+        done();
+    });
+
+
+    test('test workflow', async (done) => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+        router.push('/club/12/affiliations');
+        await flushPromises();
+
+        const current = getCurrentAffiliationView();
+
+        expect(router.currentRoute.fullPath).toEqual('/club/12/affiliations/20172018');
+        const vm = wrapper.find(ClubAffiliations).vm;
+        expect(vm.affiliations.length).toEqual(2);
+        testButtons(null, true, true, null, null);
+
+        current.find('#btnAffiliationDelete').trigger('click');
+        await flushPromises();
+        expect(vm.affiliations.length).toEqual(2);
+
+        const prefectureField = current.find('#prefectureCity');
+        const prefecture = prefectureField.element.value;
+        const newPrefecture = prefecture + '_new';
+        testButtons(null, true, true, null, null);
+        setInputText(current, '#prefectureCity', newPrefecture);
+        testButtons(true, true, true, null, null);
+        getCurrentAffiliationView().find('#btnAffiliationCancel').trigger('click');
+        testButtons(null, true, true, null, null);
+        setInputText(current, '#prefectureCity', newPrefecture);
+
+        // Submit
+        getCurrentAffiliationView().find('#btnAffiliationSubmit').trigger('click');
+        await flushPromises();
+
+        const affiliation = await new AffiliationsApi().getAffiliation('', 12, '20172018');
+        await flushPromises();
+        expect(affiliation.data.status).toEqual(AffiliationStatus.SUBMITTED);
+        expect(affiliation.data.prefectureCity).toEqual(newPrefecture);
+        testButtons(null, null, true, true, true);
+
+        // Reject
+        getCurrentAffiliationView().find('#btnAffiliationReject').trigger('click');
+        await flushPromises();
+        testButtons(null, true, true, null, null);
+
+        // Submit
+        getCurrentAffiliationView().find('#btnAffiliationSubmit').trigger('click');
+        await flushPromises();
+        testButtons(null, null, true, true, true);
+
+        // Validate
+        getCurrentAffiliationView().find('#btnAffiliationValidate').trigger('click');
+        await flushPromises();
+        testButtons(null, null, true, null, null);
+
+        done();
     });
 });

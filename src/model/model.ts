@@ -13,4 +13,5 @@ export interface ICrud {
     deleteDialog: boolean;
     editedItem: ObjectWithId;
     deletingItem: ObjectWithId;
+    readonly visibleHeaders: any;
 }

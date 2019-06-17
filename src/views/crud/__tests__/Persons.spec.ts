@@ -9,7 +9,7 @@ import globalAxios from 'axios';
 import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
 import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
 import Persons from '@/views/crud/Persons.vue';
-import {PersonsApi} from '@/generated';
+import {Functionality, PersonsApi} from '@/generated';
 
 
 describe('Persons.vue', () => {
@@ -24,7 +24,6 @@ describe('Persons.vue', () => {
         store.state.userInfo = {
             login: '',
             token: '',
-            profile: '',
             clubs: [],
             functionalities: [],
         };
@@ -50,6 +49,7 @@ describe('Persons.vue', () => {
     });
 
     test('delete person', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.PERSONDELETE];
         await testDelete(Persons, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
         }, decremented);
@@ -62,6 +62,7 @@ describe('Persons.vue', () => {
     };
 
     test('edit person', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.PERSONUPDATE];
         await testEdit(Persons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, getData, changed);
@@ -76,6 +77,7 @@ describe('Persons.vue', () => {
     };
 
     test('create person', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.PERSONCREATE];
         await testCreate(Persons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);

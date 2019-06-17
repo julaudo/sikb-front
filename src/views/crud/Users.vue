@@ -2,7 +2,8 @@
     <crud
             :items = items
             :headers = headers
-            :crudKey = "'users'"
+            crudKey = "users"
+            rightPrefix = "USER"
             :refreshing="refreshing"
             @deleteItem = deleteItem
             @createItem = createItem

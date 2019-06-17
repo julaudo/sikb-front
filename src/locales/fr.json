@@ -4,6 +4,8 @@
   "yes": "Oui",
   "no": "Non",
   "validate": "Valider",
+  "submit": "Soumettre",
+  "reject": "Rejeter",
   "delete": "Supprimer",
   "login.login": "Login",
   "login.password": "Mot de passe",

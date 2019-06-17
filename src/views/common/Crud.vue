@@ -17,22 +17,12 @@
 
             <v-spacer>
             </v-spacer>
-            <v-btn id="btnCrudCreate" color="primary" dark class="mb-2" icon @click="create()"><v-icon>add</v-icon></v-btn>
+            <v-btn v-if="canCreate()" id="btnCrudCreate" color="primary" dark class="mb-2" icon @click="create()"><v-icon>add</v-icon></v-btn>
 
-
-            <v-dialog id="refDeleteDialog" v-model="deleteDialog" persistent @keydown.esc="escapeDeleteDialog()">
-                <v-card>
-                    <v-card-title class="headline">{{$t("crud.confirmDelete")}}</v-card-title>
-
-
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-
-                        <v-btn id="refDeleteDialogNo" color="blue darken-1" :disabled="deleting" flat @click="deleteDialog = false ">{{$t("no")}}</v-btn>
-                        <v-btn id="refDeleteDialogYes" color="blue darken-1" :disabled="deleting" :loading="deleting" flat @click="onDeleteItem">{{$t("yes")}}</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-dialog>
+            <Dialog v-model="deleteDialog"
+                    :title="$t('crud.confirmDelete')"
+                    :buttons="deleteButtons">
+            </Dialog>
 
             <v-dialog id="refDialog" v-model="dialog" max-width="700px" persistent @keydown.esc="escape()">
                 <v-card>
@@ -151,39 +141,55 @@ import FieldType from '@/views/common/FieldType';
 import Validators from '@/utils/validators';
 import DateEditor from '@/views/common/DateEditor.vue';
 import MultiEditor from '@/views/common/MultiEditor.vue';
+import {Getter} from 'vuex-class';
+import {DialogButton} from '@/views/common/DialogButton';
+import Dialog from '@/views/common/Dialog.vue';
 
 @Component({
-    components: {DateEditor, MultiEditor},
+    components: {DateEditor, MultiEditor, Dialog},
 })
 export default class Crud extends Mixins(Utils, FieldType, Validators) implements ICrud {
+    @Prop() public items!: ObjectWithId[];
+    @Prop() public headers!: any[];
+    @Prop() public refreshing!: boolean;
+    @Prop() public crudKey!: string;
+    @Prop() public rightPrefix!: string;
+    @Getter public features!: string[];
 
     get propertyHeaders() {
         return this.headers.filter((f) => f.type !== this.TYPE_ACTION);
     }
 
     get actionHeaders() {
-        return this.headers.filter((f) => f.type === this.TYPE_ACTION);
+        return this.visibleHeaders.filter((f) => f.type === this.TYPE_ACTION);
+    }
+
+    get visibleHeaders() {
+        return this.headers
+            .filter((f) => this.features.includes(this.rightPrefix + '_DELETE') || f.value !== 'delete')
+            .filter((f) => this.features.includes(this.rightPrefix + '_UPDATE') || f.value !== 'edit');
     }
 
     get headersWithText() {
-        const result = this.headers.map((h) => ({...h, text: this.getHeaderName(h)}));
+        const result = this.visibleHeaders.map((h) => ({...h, text: this.getHeaderName(h)}));
         return  result;
     }
-    @Prop() public items!: ObjectWithId[];
-    @Prop() public headers!: any[];
-    @Prop() public refreshing!: boolean;
-    @Prop() public crudKey!: string;
 
     public dialog = false;
-    public deleteDialog = false;
 
     public editedItem: ObjectWithId = {};
     public deletingItem: ObjectWithId = {};
+    public deleteDialog = false;
 
     private saving = false;
-    private deleting = false;
 
     private valid = true;
+
+
+    private deleteButtons = [
+        new DialogButton('no', 'refDeleteDialogNo', () => Promise.resolve()),
+        new DialogButton('yes', 'refDeleteDialogYes', this.onDeleteItem),
+    ];
 
     private pagination = {
         rowsPerPage: 1,
@@ -307,21 +313,20 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
         this.dialog = true;
     }
 
-    private onDeleteItem() {
-        this.deleting = true;
-        this.$emit('deleteItem', this.deletingItem.id, (success: boolean) => {
-            this.deleting = false;
-            if (success) {
-                this.deleteDialog = false;
-            }
+    private onDeleteItem(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            this.$emit('deleteItem', this.deletingItem.id, (success: boolean) => {
+                if (success) {
+                    resolve();
+                } else {
+                    reject();
+                }
+            });
         });
     }
 
     private close() {
         this.dialog = false;
-        setTimeout(() => {
-            this.editedItem = {profile: {clubIds: [1]}} as ObjectWithId;
-        }, 300);
     }
 
     private save() {
@@ -344,12 +349,6 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
         if (!this.saving) {
             this.editedItem = {};
             this.dialog = false;
-        }
-    }
-
-    private escapeDeleteDialog() {
-        if (!this.deleting) {
-            this.deleteDialog = false;
         }
     }
 
@@ -380,6 +379,10 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
 
     private getId(header: any): string {
         return 'crud_' + header.value;
+    }
+
+    private canCreate(): boolean {
+        return this.features.includes(this.rightPrefix + '_CREATE');
     }
 
 }

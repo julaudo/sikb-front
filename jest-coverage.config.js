@@ -22,6 +22,7 @@ module.exports = {
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
         '\\.(css|less|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
+        'vuetify/lib': 'vuetify',
     },
     transformIgnorePatterns: [
         '<rootDir>/node_modules/(?!vuetify).*js',

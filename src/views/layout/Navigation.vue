@@ -91,7 +91,6 @@ import {RouteConfig} from 'vue-router';
 export default class Navigation extends Vue {
 
     @Getter public features!: string[];
-    @Getter public userLogin!: string;
     @Getter public clubs!: Club[];
     private drawer = null;
 

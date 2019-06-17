@@ -5,9 +5,7 @@ import {
   ClubsApi,
   ConfigurationsApi,
   Credentials,
-  Functionality,
   IdentificationsApi,
-  ProfileType,
   Season,
   Session,
 } from '../generated';
@@ -21,29 +19,23 @@ Vue.use(Vuex);
 interface State {
   userInfo: UserInfo | null;
   seasons: Season[];
-  profiles: ProfileType[];
   currentSeason: Season | null;
 }
 
 
 const getters = {
-  userLogin: (s: State) => s.userInfo!.login,
   userToken: (s: State) => s.userInfo!.token,
   clubs: (s: State) => s.userInfo!.clubs || [],
   features: (s: State) => s.userInfo!.functionalities || [],
-  profile: (s: State) => s.userInfo!.profile,
-  profiles: (s: State) => s.profiles || [],
   seasons: (s: State) => new Map( // Look Ma!  No type annotations
       s.seasons.map((season) => [season.id, season] as [string, Season])),
   currentSeason: (s: State) => s!.currentSeason,
-  data: () => ({name: 'name', value: 2}),
 };
 
 const store = new Vuex.Store({
   state: {
     userInfo: null,
     seasons: [],
-    profiles: [],
     currentSeason: null,
   },
   getters,
@@ -54,9 +46,6 @@ const store = new Vuex.Store({
     SET_SEASON_INFO: (s: State, seasons: Season[]) => {
       s.seasons = seasons;
       s.currentSeason = seasons.sort((s1, s2) => s2.id.localeCompare(s1.id))[0];
-    },
-    SET_PROFILE_INFO: (s: State, profiles: ProfileType[]) => {
-      s.profiles = profiles;
     },
     UPDATE_CLUB: (s: State, data: {index: number, club: Club}) => {
       s.userInfo!.clubs[data.index] = data.club;
@@ -84,19 +73,13 @@ const store = new Vuex.Store({
           const userInfo: UserInfo = {
             token: response.data.access_token,
             login: credentials.login,
-            profile: '',
             clubs: [],
             functionalities: []};
 
           const promises: AxiosPromise[] = [];
-          const clubsIds = [];
 
-          if (userInfo.login.startsWith('admin')) {
-            Object.keys(Functionality).forEach((f) => userInfo.functionalities.push(f));
-          } else {
-            userInfo.functionalities.push(Functionality.CLUBCREATE);
-            clubsIds.push(1);
-          }
+          const clubsIds = response.data.user.profile.clubIds;
+          userInfo.functionalities = response.data.user.profile.type.functionalities;
 
           clubsIds.forEach((id) => {
             const promise = new ClubsApi(baseOptions).getClubById(response.data.access_token, id);
@@ -104,13 +87,6 @@ const store = new Vuex.Store({
             promise.then((clubs: AxiosResponse<Club>) => {
               userInfo.clubs.push(clubs.data);
             });
-          });
-
-          const profilesPromise = new ConfigurationsApi(baseOptions).findProfileTypes(response.data.access_token);
-          promises.push(profilesPromise);
-          const profiles: ProfileType[] = [];
-          profilesPromise.then((r) => {
-            r.data.forEach((p) => profiles.push(p));
           });
 
           const seasonsPromise = new ConfigurationsApi(baseOptions).findSeasons(response.data.access_token);
@@ -123,7 +99,6 @@ const store = new Vuex.Store({
           Promise.all(promises).then(() => {
             commit('SET_LOGIN_INFO', userInfo);
             commit('SET_SEASON_INFO', seasons);
-            commit('SET_PROFILE_INFO', profiles);
             resolve();
           });
         }).catch((error: any) => {

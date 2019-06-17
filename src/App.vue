@@ -57,7 +57,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 import Axios from 'axios';
 import NProgress from 'nprogress';
-import router from '@/router';
 import {Route} from 'vue-router';
 import store from '@/store/store';
 
@@ -96,7 +95,7 @@ export default class App extends Vue {
       return Promise.reject(error);
     });
 
-    router.beforeEach((to: Route, from: Route, next) => {
+    this.$router.beforeEach((to: Route, from: Route, next) => {
       this.incrementCount();
       // TODO check /club access
       if (to.meta

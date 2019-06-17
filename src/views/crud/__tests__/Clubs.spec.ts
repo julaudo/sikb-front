@@ -8,7 +8,7 @@ import store from '@/store/store';
 import globalAxios from 'axios';
 import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
 import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
-import {ClubsApi} from '@/generated';
+import {ClubsApi, Functionality} from '@/generated';
 import Clubs from '@/views/crud/Clubs.vue';
 
 
@@ -24,7 +24,6 @@ describe('Clubs.vue', () => {
         store.state.userInfo = {
             login: '',
             token: '',
-            profile: '',
             clubs: [],
             functionalities: [],
         };
@@ -50,6 +49,7 @@ describe('Clubs.vue', () => {
     });
 
     test('delete club', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.CLUBDELETE];
         await testDelete(Clubs, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
         }, decremented);
@@ -62,6 +62,7 @@ describe('Clubs.vue', () => {
     };
 
     test('edit club', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.CLUBUPDATE];
         await testEdit(Clubs, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, getData, changed);
@@ -75,6 +76,7 @@ describe('Clubs.vue', () => {
     };
 
     test('create club', async (done) => {
+        store.state.userInfo!.functionalities = [Functionality.CLUBCREATE];
         await testCreate(Clubs, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);
