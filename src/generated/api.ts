@@ -265,7 +265,7 @@ export interface AffiliationForUpdate {
 }
 
 /**
- * Once an affiliation is created, if the status is not provided then it\'s initialized with TO_COMPLETE. Then available transitions are : - TO_COMPLETE ==> SUBMITTED - SUBMITTED ==> VALIDATED - SUBMITTED ==> TO_COMPLETE
+ * Once an affiliation is created, if the status is not provided then it\'s initialized with TO_COMPLETE. Then available transitions are : https://www.draw.io/?lightbox=1&target=blank&highlight=0000ff&layers=1&nav=1&title=Affilation_Workflow.drawio#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Falexeil%2Fsikb-api%2Fmaster%2Fdocs%2Fspecifications%2FAffilation_Workflow.drawio 
  * @export
  * @enum {string}
  */
@@ -537,7 +537,12 @@ export enum Functionality {
     CLUBCREATE = 'CLUB_CREATE',
     CLUBUPDATE = 'CLUB_UPDATE',
     CLUBDELETE = 'CLUB_DELETE',
+    AFFILIATIONREAD = 'AFFILIATION_READ',
+    AFFILIATIONCREATE = 'AFFILIATION_CREATE',
+    AFFILIATIONUPDATE = 'AFFILIATION_UPDATE',
+    AFFILIATIONDELETE = 'AFFILIATION_DELETE',
     AFFILIATIONVALIDATE = 'AFFILIATION_VALIDATE',
+    AFFILIATIONREJECT = 'AFFILIATION_REJECT',
     PERSONREAD = 'PERSON_READ',
     PERSONCREATE = 'PERSON_CREATE',
     PERSONUPDATE = 'PERSON_UPDATE',
