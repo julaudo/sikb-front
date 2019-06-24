@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-btn color="primary" dark class="mb-2" icon v-on:click="browse()">...</v-btn>
+        <v-btn color="primary" dark class="mb-2" icon v-on:click="fileInput().click()">...</v-btn>
 
         <input type="file" :accept="accept"
                ref="fileInput" @change="onFileChange">
@@ -18,10 +18,6 @@ export default class Uploader extends Vue {
 
     public fileInput(): HTMLInputElement {
         return this.$refs.fileInput as HTMLInputElement;
-    }
-
-    public browse() {
-        this.fileInput().click();
     }
 
     public onFileChange() {

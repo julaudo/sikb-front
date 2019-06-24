@@ -6,8 +6,8 @@ import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import store from '@/store/store';
 import globalAxios from 'axios';
-import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
-import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
+import {flushPromises, initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
+import {changed, decremented, equal, getRows, incremented, testCreate, testDelete, testEdit} from '@/test/common';
 import Persons from '@/views/crud/Persons.vue';
 import {Functionality, PersonsApi} from '@/generated';
 
@@ -41,6 +41,7 @@ describe('Persons.vue', () => {
         });
 
         await startjsonserver();
+        await flushPromises();
     });
 
     afterEach(async () => {
@@ -48,26 +49,47 @@ describe('Persons.vue', () => {
         await stopjsonserver();
     });
 
-    test('delete person', async (done) => {
+    test('delete person', async () => {
         store.state.userInfo!.functionalities = [Functionality.PERSONDELETE];
         await testDelete(Persons, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
+            return true;
         }, decremented);
+    });
 
-        done();
+    test('delete person failure', async () => {
+        store.state.userInfo!.functionalities = [Functionality.PERSONDELETE];
+
+        // Delete from database
+        const items = wrapper.find(Persons).vm.items;
+        for (const item of items) {
+            await new PersonsApi().deletePerson('', item.id);
+        }
+
+        // Delete fails
+        await testDelete(Persons, wrapper, () => {
+            wrapper.find('#refDeleteDialogYes').trigger('click');
+            return false;
+        }, equal);
+        expect(getRows(wrapper).length).toBe(items.length);
+
+        // Refresh : table is now empty
+        wrapper.find('#btnRefresh').element.click();
+        await flushPromises();
+
+
+        expect(wrapper.find(Persons).vm.items.length).toBe(0);
     });
 
     const getData = async (id: any) => {
         return (await new PersonsApi().getPerson('', id)).data.name;
     };
 
-    test('edit person', async (done) => {
+    test('edit person', async () => {
         store.state.userInfo!.functionalities = [Functionality.PERSONUPDATE];
         await testEdit(Persons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, getData, changed);
-
-        done();
     });
 
     const setData = () => {
@@ -76,12 +98,16 @@ describe('Persons.vue', () => {
         setInputText(wrapper.find('#crud_email'), 'input', 'mail@mail.fr');
     };
 
-    test('create person', async (done) => {
+    test('create person', async () => {
         store.state.userInfo!.functionalities = [Functionality.PERSONCREATE];
         await testCreate(Persons, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);
+    });
 
-        done();
+    test('create resize', async () => {
+        (global as any).innerHeight = 500;
+
+        (global as any).dispatchEvent(new Event('resize'));
     });
 });

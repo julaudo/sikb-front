@@ -24,12 +24,13 @@ export const testDelete = async (component: any, wrapper: Wrapper<any>, action: 
 
     expect(crud.deleteDialog).toBeTruthy();
 
-    action();
+    const popupClosed = action();
     await flushPromises();
-    expect(crud.deleteDialog).toBeFalsy();
 
     const after = getRows(wrapper).length;
     countExpect(before, after);
+
+    expect(crud.deleteDialog).toBe(!popupClosed);
 };
 
 

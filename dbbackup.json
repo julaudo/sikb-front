@@ -113,280 +113,327 @@
       "name": "Association Sportive Béarnaise de Kin-Ball",
       "shortName": "ASBEK",
       "id": 2,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=ASBEK.png"
-      }
+      "logoId": 2
     },
     {
       "name": "Association de Kin-Ball Landeronnais",
       "shortName": "AKBL",
       "id": 3,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=AKBL.png"
-      }
+      "logoId": 3
     },
     {
       "name": "Berric Kin-Ball",
       "shortName": "KBK",
       "id": 4,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBK.png"
-      }
+      "logoId": 4
     },
     {
       "name": "Campbon Loire et sillon Olympique Kinball Club",
       "shortName": "CLOKC",
       "id": 5,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=CLOKC.png"
-      }
+      "logoId": 5
     },
     {
       "name": "Etendard Sportif de Messimy",
       "shortName": "ESM",
       "id": 6,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=ESM.png"
-      }
+      "logoId": 6
     },
     {
       "name": "Grosse Boule Quintinaise",
       "shortName": "GBQ",
       "id": 7,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=GBQ.png"
-      }
+      "logoId": 7
     },
     {
       "name": "Kinball Association du Vignoble",
       "shortName": "KAV",
       "id": 8,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KAV.png"
-      }
+      "logoId": 8
     },
     {
       "name": "Kin-ball Old School",
       "shortName": "KBOS",
       "id": 9,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBOS.png"
-      }
+      "logoId": 9
     },
     {
       "name": "Kin-Ball 86",
       "shortName": "KB86",
       "id": 10,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KB86.png"
-      }
+      "logoId": 10
     },
     {
       "name": "Kin-Ball Armor Moncontour",
       "shortName": "KBAM",
       "id": 11,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBAM.png"
-      }
+      "logoId": 11
     },
     {
       "name": "Kin-Ball Association Rennes",
       "shortName": "KBAR",
       "id": 12,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBAR.png"
-      }
+      "logoId": 12
     },
     {
       "name": "Kin-ball Club Ilois",
       "shortName": "KCI",
       "id": 13,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KCI.png"
-      }
+      "logoId": 13
     },
     {
       "name": "Kin-Ball Club Maubeuge Val de Sambre",
       "shortName": "KCMVS",
       "id": 14,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KCMVS.png"
-      }
+      "logoId": 14
     },
     {
       "name": "Kin-Ball Club Villeneuvois",
       "shortName": "KBCV",
       "id": 15,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBCV.png"
-      }
+      "logoId": 15
     },
     {
       "name": "Kin-Ball Gwened",
       "shortName": "KBG",
       "id": 16,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBG.png"
-      }
+      "logoId": 16
     },
     {
       "name": "Kin-Ball Montalbanais",
       "shortName": "KBM",
       "id": 17,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=KBM.png"
-      }
+      "logoId": 17
     },
     {
       "name": "Kin-Ball Pays Voironnais",
       "shortName": "NA",
-      "id": 18
+      "id": 18,
+      "logoId": 18
     },
     {
       "name": "Le Mans Union Kin-Ball 72",
       "shortName": "MUKC",
       "id": 19,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=MUKC.png"
-      }
+      "logoId": 19
     },
     {
       "name": "Les Insolentes Lyon",
       "shortName": "NA",
       "id": 20,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=NA.png"
-      }
+      "logoId": 20
     },
     {
       "name": "Ligue Kin-Ball Paris et Ile-de-France",
       "shortName": "LKBP",
       "id": 21,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=LKBP.png"
-      }
+      "logoId": 21
     },
     {
       "name": "Montpellier Kin-Ball",
       "shortName": "MKB",
       "id": 22,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=MKB.png"
-      }
+      "logoId": 22
     },
     {
       "name": "Nantes Atlantique Kin-ball Club",
       "shortName": "NAKC",
       "id": 23,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=NAKC.png"
-      }
+      "logoId": 23
     },
     {
       "name": "Noisy Kinball",
       "shortName": "NKB",
       "id": 24,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=NKB.png"
-      }
+      "logoId": 24
     },
     {
       "name": "Paris 13 Kin-ball",
       "shortName": "PXIII",
       "id": 25,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=PXIII.png"
-      }
+      "logoId": 25
     },
     {
       "name": "Vald'Oise Association Sportive Kinball",
       "shortName": "VASK",
       "id": 26,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=VASK.png"
-      }
+      "logoId": 26
     },
     {
       "name": "Penn-ar-Bed Kin-ball",
       "shortName": "PBKB",
       "id": 27,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=PBKB.png"
-      }
+      "logoId": 27
     },
     {
       "name": "Saint-Brieuc Kin-Ball Association",
       "shortName": "SKAB",
       "id": 28,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=SKAB.png"
-      }
+      "logoId": 28
     },
     {
       "name": "Salon Kin-Ball Star",
       "shortName": "SKBS",
       "id": 29,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=SKBS.png"
-      }
+      "logoId": 29
     },
     {
       "name": "SCO Angers",
       "shortName": "SCO",
       "id": 30,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=SCO.png"
-      }
+      "logoId": 30
     },
     {
       "name": "Sporting Kin-Ball Baden",
       "shortName": "SKBB",
       "id": 31,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=SKBB.png"
-      }
+      "logoId": 31
     },
     {
       "name": "Toulouse Kinball Club",
       "shortName": "TKC",
       "id": 32,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=TKC.png"
-      }
+      "logoId": 32
     },
     {
       "name": "Tours KinBall Club",
       "shortName": "TKBC",
       "id": 33,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=TKBC.png"
-      }
+      "logoId": 33
     },
     {
       "name": "Valence MPT Petit Charran",
       "shortName": "MPT",
       "id": 34,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=MPT.png"
-      }
+      "logoId": 34
     },
     {
       "name": "Kinball Académie Pont à Mousson",
       "shortName": "NA",
-      "id": 35
+      "id": 35,
+      "logoId": 35
     },
     {
       "name": "Kinball Moulins lès Metz",
       "shortName": "NA",
-      "id": 36
+      "id": 36,
+      "logoId": 36
     },
     {
       "name": "Amicale des Anciens Elèves des Ecoles Communales Ponts de Cé",
       "shortName": "AAEEC2",
       "id": 1,
-      "logo": {
-        "location": "https://sikb-api.eu-west-3.elasticbeanstalk.com/document/?type=logo&id=YTgyZjI1MTUtYjQ4Yy00YTBjLTg0YTMtMzIwZjBhYTAzOWFmMjAxOS0wNS0yNFQyMjoxOTo1Mi4zODRa"
-      }
+      "logoId": 1
+    }
+  ],
+  "logos": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "id": 6
+    },
+    {
+      "id": 7
+    },
+    {
+      "id": 8
+    },
+    {
+      "id": 9
+    },
+    {
+      "id": 10
+    },
+    {
+      "id": 11
+    },
+    {
+      "id": 12
+    },
+    {
+      "id": 13
+    },
+    {
+      "id": 14
+    },
+    {
+      "id": 15
+    },
+    {
+      "id": 16
+    },
+    {
+      "id": 17
+    },
+    {
+      "id": 18
+    },
+    {
+      "id": 19
+    },
+    {
+      "id": 20
+    },
+    {
+      "id": 21
+    },
+    {
+      "id": 22
+    },
+    {
+      "id": 23
+    },
+    {
+      "id": 24
+    },
+    {
+      "id": 25
+    },
+    {
+      "id": 26
+    },
+    {
+      "id": 27
+    },
+    {
+      "id": 28
+    },
+    {
+      "id": 29
+    },
+    {
+      "id": 30
+    },
+    {
+      "id": 31
+    },
+    {
+      "id": 32
+    },
+    {
+      "id": 33
+    },
+    {
+      "id": 34
+    },
+    {
+      "id": 35
+    },
+    {
+      "id": 36
     }
   ],
   "users": [

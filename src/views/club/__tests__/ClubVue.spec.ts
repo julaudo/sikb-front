@@ -16,7 +16,7 @@ import {createRouter} from '@/router';
 import App from '@/App.vue';
 import globalAxios from 'axios';
 import ClubVue from '@/views/club/ClubVue.vue';
-import {Club} from '@/generated';
+import {Club, ClubsApi} from '@/generated';
 import {addFileList} from '@/test/filelist';
 
 describe('ClubVue.vue', () => {
@@ -47,7 +47,7 @@ describe('ClubVue.vue', () => {
         await stopjsonserver();
     });
 
-    test('test reset', async (done) => {
+    test('test reset', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         await flushPromises();
         router.push({path: '/club/1/general'});
@@ -67,11 +67,9 @@ describe('ClubVue.vue', () => {
 
         expectInput(wrapper, '#clubName', clubName);
         expectInput(wrapper, '#clubShortName', clubShortName);
-
-        done();
     });
 
-    test('test set name', async (done) => {
+    test('test set name', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         await flushPromises();
         router.push({path: '/club/1/general'});
@@ -96,10 +94,9 @@ describe('ClubVue.vue', () => {
 
         expect(storeClub.name).toEqual(newClubName);
         expect(storeClub.shortName).toEqual(newClubShortName);
-        done();
     });
 
-    test('test set logo', async (done) => {
+    test('test set logo', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         await flushPromises();
         router.push({path: '/club/1/general'});
@@ -111,6 +108,10 @@ describe('ClubVue.vue', () => {
         uploader.trigger('change');
         await flushPromises();
 
-        done();
+        wrapper.find('#btnValidate').trigger('click');
+        await flushPromises();
+
+        const club = await new ClubsApi().getClubById('', 1);
+        console.log(club.data.logo!.location);
     });
 });

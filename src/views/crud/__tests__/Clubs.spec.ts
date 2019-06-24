@@ -52,6 +52,7 @@ describe('Clubs.vue', () => {
         store.state.userInfo!.functionalities = [Functionality.CLUBDELETE];
         await testDelete(Clubs, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
+            return true;
         }, decremented);
 
         done();

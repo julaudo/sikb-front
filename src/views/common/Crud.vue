@@ -8,7 +8,7 @@
                     vertical
             ></v-divider>
 
-            <v-btn :loading="refreshing" color="primary" dark class="mb-2" icon @click="refresh()"><v-icon>refresh</v-icon></v-btn>
+            <v-btn id="btnRefresh" :loading="refreshing" color="primary" dark class="mb-2" icon @click="refresh()"><v-icon>refresh</v-icon></v-btn>
             <v-divider
                     class="mx-2"
                     inset
@@ -196,9 +196,6 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
     };
 
     public getColumnText(header: any, item: any) {
-        if (!this.resolveProperty(header.value, item)) {
-            return '';
-        }
         if (header.type === this.TYPE_DATE) {
             return this.resolveProperty(header.value, item); // Todo format
         } else if (header.type === this.TYPE_LIST) {
@@ -214,10 +211,7 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
         if (header.chipText) {
             return header.chipText.print(item);
         }
-        if (header.itemText) {
-            return header.itemText.print(item);
-        }
-        return item;
+        return header.itemText.print(item);
     }
 
     public getHeaderName(h: any) {
@@ -280,10 +274,8 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
             this.pagination.rowsPerPage = Math.ceil(1);
         }
 
-        const elt = this.$el.childNodes[1] as HTMLElement;
-        if (elt.style) {
-            elt.style.height = header + this.pagination.rowsPerPage * row + 'px';
-        }
+        const elt = this.$el.children[1] as HTMLElement;
+        elt.style.height = header + this.pagination.rowsPerPage * row + 'px';
     }
 
     private action(a: string, item: ObjectWithId) {
@@ -294,9 +286,6 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
             case 'delete':
                 this.deletingItem = item;
                 this.deleteDialog = true;
-                break;
-            default:
-                this.$emit(a, item);
                 break;
         }
     }

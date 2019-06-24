@@ -52,6 +52,7 @@ describe('Seasons.vue', () => {
         store.state.userInfo!.functionalities = [Functionality.SEASONDELETE];
         await testDelete(Seasons, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
+            return true;
         }, decremented);
 
         done();

@@ -88,7 +88,7 @@ describe('ClubAffiliations.vue', () => {
         await stopjsonserver();
     });
 
-    test('test routes', async (done) => {
+    test('test routes', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         router.push('/club/12/affiliations');
         await flushPromises();
@@ -182,12 +182,9 @@ describe('ClubAffiliations.vue', () => {
         };
         await flushPromises();
         testButtons(true, true, null, null, null);
-
-        done();
-
     });
 
-    test('test delete', async (done) => {
+    test('test delete', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         router.push('/club/12/affiliations');
         await flushPromises();
@@ -203,12 +200,10 @@ describe('ClubAffiliations.vue', () => {
         getCurrentAffiliationView().find('#refDeleteDialogYes').trigger('click');
         await flushPromises();
         expect(vm.affiliations.length).toEqual(1);
-
-        done();
     });
 
 
-    test('test workflow', async (done) => {
+    test('test workflow', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         router.push('/club/12/affiliations');
         await flushPromises();
@@ -258,11 +253,9 @@ describe('ClubAffiliations.vue', () => {
         getCurrentAffiliationView().find('#btnAffiliationValidate').trigger('click');
         await flushPromises();
         testButtons(null, null, true, null, null);
-
-        done();
     });
 
-    test('test update', async (done) => {
+    test('test update', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         router.push('/club/12/affiliations');
         await flushPromises();
@@ -281,6 +274,52 @@ describe('ClubAffiliations.vue', () => {
 
         affiliation = await new AffiliationsApi().getAffiliation('', 12, '20172018');
         expect(affiliation.data.board.president.sex).toBe(Sex.FEMALE);
-        done();
+    });
+
+    test('test create', async () => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+        router.push('/club/14/affiliations/20162017');
+        await flushPromises();
+
+        const vm = wrapper.find(ClubAffiliations).vm;
+
+        const affiliationsBefore = await new AffiliationsApi().findAllClubAffiliations('', 14);
+
+        // Création
+        await flushPromises();
+        expect(vm.affiliations.length).toEqual(1);
+        expect(vm.active).toEqual('20162017');
+        testButtons(true, false, null, null, null);
+
+        // Remplissage avec des données valides
+        vm.affiliations[0].affiliation = {
+            address: 'address',
+            board: {
+                electedDate: '2018-01-01',
+                membersNumber: 2,
+                president: {name: 'president', sex: Sex.MALE},
+                secretary: {name: 'secretary', sex: Sex.MALE},
+                treasurer: {name: 'treasurer', sex: Sex.MALE},
+            },
+            city: 'city',
+            email: 'mail@mail.fr',
+            phoneNumber: '0666223344',
+            postalCode: 'postalCode',
+            prefectureCity: 'prefectureCity',
+            prefectureNumber: 'prefectureNumber',
+            siretNumber: 'siretNumber',
+            webSite: 'webSite',
+            status: AffiliationStatus.TOCOMPLETE,
+        };
+        await flushPromises();
+        testButtons(true, true, null, null, null);
+
+        // Submit
+        getCurrentAffiliationView().find('#btnAffiliationSubmit').trigger('click');
+        await flushPromises();
+        testButtons(null, null, true, true, true);
+
+        const affiliationsAfter = await new AffiliationsApi().findAllClubAffiliations('', 14);
+        expect(affiliationsAfter.data.length).toBe(affiliationsBefore.data.length + 1);
     });
 });

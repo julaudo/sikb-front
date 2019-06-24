@@ -61,6 +61,7 @@ describe('Users.vue', () => {
         store.state.userInfo!.functionalities = [Functionality.USERDELETE];
         await testDelete(Users, wrapper, () => {
             wrapper.find('#refDeleteDialogYes').trigger('click');
+            return true;
         }, decremented);
 
         done();
@@ -71,6 +72,7 @@ describe('Users.vue', () => {
         store.state.userInfo!.functionalities = [Functionality.USERDELETE];
         await testDelete(Users, wrapper, () => {
             wrapper.find('#refDeleteDialogNo').trigger('click');
+            return true;
         }, equal);
 
         done();
@@ -80,6 +82,7 @@ describe('Users.vue', () => {
         store.state.userInfo!.functionalities = [Functionality.USERDELETE];
         await testDelete(Users, wrapper, () => {
             wrapper.find('#refDeleteDialogNo').trigger('keydown.esc');
+            return true;
         }, equal);
 
         done();
@@ -133,7 +136,7 @@ describe('Users.vue', () => {
         done();
     });
 
-    test('create user', async (done) => {
+    test('create user cancel', async (done) => {
         store.state.userInfo!.functionalities = [Functionality.USERCREATE];
         await testCreate(Users, wrapper, () => {
             wrapper.find('#refDialogCancel').trigger('click');
@@ -142,7 +145,7 @@ describe('Users.vue', () => {
         done();
     });
 
-    test('create user', async (done) => {
+    test('create user escape', async (done) => {
         store.state.userInfo!.functionalities = [Functionality.USERCREATE];
         await testCreate(Users, wrapper, () => {
             wrapper.find('#refDialogCancel').trigger('keydown.esc');

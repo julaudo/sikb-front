@@ -53,7 +53,8 @@ export default class Utils extends Vue {
         } else if (second === null || second === undefined) {
             return false;
         } else {
-            return JSON.stringify(first) === JSON.stringify(second);
+            const isEqual = require('lodash.isequal');
+            return isEqual(first, second);
         }
     }
 

@@ -1,9 +1,9 @@
 import {Functionality} from '@/generated';
-
 let httpServer: any = null;
 let requests = 0;
 let interceptors = false;
 
+// tslint:disable no-console
 
 function initLogin(server: any) {
     server.get('/users/logout', (req: any, res: any) => {
@@ -41,11 +41,59 @@ export const startjsonserver = async () => {
             const server = jsonServer.create();
             const router = jsonServer.router('db.json');
             const middlewares = jsonServer.defaults();
+            const request = require('request');
             server.use(jsonServer.bodyParser);
             server.use(middlewares);
 
+            server.use((req: any, res: any, next: any) => {
+                console.log(req.method + ' ' + req.url + ' => ' + res.statusCode);
+                next();
+                console.log(req.method + ' ' + req.url + ' => ' + res.statusCode);
+            });
+
             server.use('/clubs/:clubId/seasons/:seasonId/affiliations', (req: any, res: any) => {
-                res.redirect(307, '/affiliations/' + req.params.clubId + req.params.seasonId);
+                if (req.method === 'POST') {
+                    res.redirect(307, '/affiliations?clubId=' + req.params.clubId + '&seasonId=' + req.params.seasonId);
+                } else {
+                    res.redirect(307, '/affiliations/' + req.params.clubId + req.params.seasonId);
+                }
+            });
+
+            server.use('/affiliations', (req: any, res: any, next: any) => {
+                if (req.method === 'POST') {
+                    // Create affiliation : need to create an affiliationsWithSeason too
+                    request.post({
+                        url: 'http://localhost:3000/affiliationsWithSeason',
+                        form: {
+                            clubId: req.query.clubId,
+                            seasonId: req.query.seasonId,
+                            affiliationId: req.query.clubId + '' + req.query.seasonId,
+                            id: req.query.clubId + '_' + req.query.seasonId,
+                        },
+                    }, () => {
+                        // Set affiliation id
+                        req.body.id = req.query.clubId + '' + req.query.seasonId;
+                        next();
+                    });
+                } else {
+                    next();
+                }
+            });
+
+            server.use('/clubs/:clubId/logo', (req: any, res: any) => {
+                res.redirect(307, '/logos/' + req.params.clubId);
+            });
+
+            server.use('/logos/:logoId', (req: any, res: any, next: any) => {
+                if (req.method === 'POST') {
+                    req.method = 'PUT';
+                }
+                next();
+            });
+
+            server.use('/clubs/:clubId', (req: any, res: any, next: any) => {
+                req.query._expand = 'logo';
+                next();
             });
 
             server.use('/clubs/:clubId/affiliations', (req: any, res: any) => {

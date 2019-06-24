@@ -189,28 +189,31 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
         this.resize();
     }
 
-    public resize(): void {
-        this.$nextTick(() => {
-            if (this.$refs.tabs) {
-                const tabsElement = this.getComponentRefElement(this.$refs.tabs);
-                const tabItemElement = this.getComponentRefElement(this.$refs.tabItem);
-                const tabElement = this.getComponentRefElement(this.$refs.tab);
-                const btnAffiliate = this.$refs.btnAffiliate as HTMLElement;
+    public updated() {
+        this.resize();
+    }
+
+    public async resize() {
+        await this.$nextTick();
+        if (this.$refs.tabs) {
+            const tabsElement = this.getComponentRefElement(this.$refs.tabs);
+            const tabItemElement = this.getComponentRefElement(this.$refs.tabItem);
+            const tabElement = this.getComponentRefElement(this.$refs.tab);
+            const btnAffiliate = this.$refs.btnAffiliate as HTMLElement;
 
 
-                const titleElement = this.$refs.title as HTMLElement;
+            const titleElement = this.$refs.title as HTMLElement;
 
-                let height = titleElement.clientHeight;
-                if (btnAffiliate) {
-                    height += btnAffiliate.clientHeight;
-                }
-                tabsElement.style.height = this.calcHeight(height);
-
-                tabItemElement.parentElement!.style.height = '100%';
-                tabItemElement.parentElement!.parentElement!.style.height
-                    = this.calcHeight(tabElement.clientHeight);
+            let height = titleElement.clientHeight;
+            if (btnAffiliate) {
+                height += btnAffiliate.clientHeight;
             }
-        });
+            tabsElement.style.height = this.calcHeight(height);
+
+            tabItemElement.parentElement!.style.height = '100%';
+            tabItemElement.parentElement!.parentElement!.style.height
+                = this.calcHeight(tabElement.clientHeight);
+        }
     }
 
     public calcHeight(height: number): string {
@@ -257,40 +260,35 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
     }
 
     private affiliateForSeasonAndSetRouteFromExisting(season: Season, affiliationSeason: SeasonWithAffiliation | null = null) {
-        if (!affiliationSeason) {
-            affiliationSeason = {
-                season,
-                affiliation: {
-                    address: '',
-                    board: {
-                        electedDate: '',
-                        membersNumber: 0,
-                        president: {name: '', sex: Sex.MALE},
-                        secretary: {name: '', sex: Sex.MALE},
-                        treasurer: {name: '', sex: Sex.MALE},
-                    },
-                    city: '',
-                    email: '',
-                    phoneNumber: '',
-                    postalCode: '',
-                    prefectureCity: '',
-                    prefectureNumber: '',
-                    siretNumber: '',
-                    webSite: '',
-                    id: 0,
-                    status: AffiliationStatus.TOCOMPLETE,
-                },
-            };
-        }
+        const newAffiliation = {
+            address: '',
+                board: {
+                electedDate: '',
+                    membersNumber: 0,
+                    president: {name: '', sex: Sex.MALE},
+                secretary: {name: '', sex: Sex.MALE},
+                treasurer: {name: '', sex: Sex.MALE},
+            },
+            city: '',
+                email: '',
+                phoneNumber: '',
+                postalCode: '',
+                prefectureCity: '',
+                prefectureNumber: '',
+                siretNumber: '',
+                webSite: '',
+                id: 0,
+                status: AffiliationStatus.TOCOMPLETE,
+        };
         const affiliation = {
             season,
-            affiliation: this.copy(affiliationSeason.affiliation),
+            affiliation: this.copy(affiliationSeason ? affiliationSeason.affiliation : newAffiliation),
         };
         affiliation.affiliation.id = 0;
         affiliation.affiliation.board.electedDate = '';
-        this.active = '' + affiliationSeason.season.id;
+        this.active = '' + affiliation.season.id;
 
-        this.affiliations.push(affiliationSeason);
+        this.affiliations.push(affiliation);
         this.resize();
 
         this.$router.push({name: 'affiliation', params: {seasonId: season.id }});
