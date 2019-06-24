@@ -15,7 +15,7 @@ import {Functionality, PersonsApi} from '@/generated';
 describe('Persons.vue', () => {
     let wrapper: any;
 
-    beforeEach((done) => {
+    beforeEach(async () => {
         initAxiosInterceptors(globalAxios);
         jest.setTimeout(30000);
         require('dotenv').config();
@@ -40,12 +40,12 @@ describe('Persons.vue', () => {
             store,
         });
 
-        startjsonserver(() => undefined, done);
+        await startjsonserver();
     });
 
-    afterEach((done) => {
+    afterEach(async () => {
         wrapper.destroy();
-        stopjsonserver(done);
+        await stopjsonserver();
     });
 
     test('delete person', async (done) => {

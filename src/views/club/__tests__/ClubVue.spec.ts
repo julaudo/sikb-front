@@ -10,8 +10,7 @@ import {
     expectInput,
     flushPromises,
     initAxiosInterceptors, setInputText,
-    startjsonserver,
-    stopjsonserver,
+    startjsonserver, stopjsonserver,
 } from '@/test/utils';
 import {createRouter} from '@/router';
 import App from '@/App.vue';
@@ -20,13 +19,11 @@ import ClubVue from '@/views/club/ClubVue.vue';
 import {Club} from '@/generated';
 import {addFileList} from '@/test/filelist';
 
-
-
 describe('ClubVue.vue', () => {
     let wrapper: any;
     let router: Router;
 
-    beforeEach((done) => {
+    beforeEach(async () => {
         initAxiosInterceptors(globalAxios);
 
 
@@ -42,12 +39,12 @@ describe('ClubVue.vue', () => {
             router,
             store,
         });
-        startjsonserver((server: any) => undefined, done);
+        await startjsonserver();
     });
 
-    afterEach(async (done) => {
+    afterEach(async () => {
         wrapper.destroy();
-        stopjsonserver(done);
+        await stopjsonserver();
     });
 
     test('test reset', async (done) => {

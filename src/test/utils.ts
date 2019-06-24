@@ -33,38 +33,44 @@ function initLogin(server: any) {
     });
 }
 
-export const startjsonserver = (init: (server: any) => void, done: any) => {
-    const fs = require('fs');
-    fs.copyFile('dbbackup.json', 'db.json', () => {
-        const jsonServer = require('json-server');
-        const server = jsonServer.create();
-        const router = jsonServer.router('db.json');
-        const middlewares = jsonServer.defaults();
-        server.use(jsonServer.bodyParser);
-        server.use(middlewares);
+export const startjsonserver = async () => {
+    return new Promise((done) => {
+        const fs = require('fs');
+        fs.copyFile('dbbackup.json', 'db.json', () => {
+            const jsonServer = require('json-server');
+            const server = jsonServer.create();
+            const router = jsonServer.router('db.json');
+            const middlewares = jsonServer.defaults();
+            server.use(jsonServer.bodyParser);
+            server.use(middlewares);
 
+            server.use('/clubs/:clubId/seasons/:seasonId/affiliations', (req: any, res: any) => {
+                res.redirect(307, '/affiliations/' + req.params.clubId + req.params.seasonId);
+            });
 
+            server.use('/clubs/:clubId/affiliations', (req: any, res: any) => {
+                res.redirect(307, '/affiliationsWithSeason?_expand=season&_expand=affiliation&clubId=' + req.params.clubId);
+            });
 
-        server.use('/clubs/:clubId/seasons/:seasonId/affiliations', (req: any, res: any) => {
-            res.redirect(307, '/affiliations/' + req.params.clubId + '_' + req.params.seasonId);
-        });
+            initLogin(server);
+            server.use(router);
 
-        initLogin(server);
-        init(server);
-        server.use(router);
-
-        httpServer = server.listen(3000, () => {
-            console.log('JSON Server is running');  /* tslint:disable-line:no-console */
-            done();
+            httpServer = server.listen(3000, () => {
+                console.log('JSON Server is running');  /* tslint:disable-line:no-console */
+                done();
+            });
         });
     });
+
 };
 
 
-export const stopjsonserver = (done: any) => {
-    httpServer.close(() => {
-        console.log('JSON Server is stopped');  /* tslint:disable-line:no-console */
-        done();
+export const stopjsonserver = async () => {
+    return new Promise((resolve) => {
+        httpServer.close(() => {
+            console.log('JSON Server is stopped');  /* tslint:disable-line:no-console */
+            resolve();
+        });
     });
 };
 

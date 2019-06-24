@@ -61,7 +61,7 @@ describe('ClubAffiliations.vue', () => {
 
 
     let router: Router;
-    beforeEach(async (done) => {
+    beforeEach(async () => {
         initAxiosInterceptors(globalAxios);
         jest.setTimeout(30000);
         Vue.use(Vuetify);
@@ -80,12 +80,12 @@ describe('ClubAffiliations.vue', () => {
             store,
         });
 
-        startjsonserver(() => undefined, done);
+        await startjsonserver();
     });
 
-    afterEach(async (done) => {
+    afterEach(async () => {
         wrapper.destroy();
-        stopjsonserver(done);
+        await stopjsonserver();
     });
 
     test('test routes', async (done) => {
@@ -259,6 +259,28 @@ describe('ClubAffiliations.vue', () => {
         await flushPromises();
         testButtons(null, null, true, null, null);
 
+        done();
+    });
+
+    test('test update', async (done) => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+        router.push('/club/12/affiliations');
+        await flushPromises();
+        const current = getCurrentAffiliationView();
+
+
+        let affiliation = await new AffiliationsApi().getAffiliation('', 12, '20172018');
+        expect(affiliation.data.board.president.sex).toBe(Sex.MALE);
+
+        const radios = current.findAll('input[type="radio"]');
+        radios.at(1).element.click();
+
+        // Submit
+        getCurrentAffiliationView().find('#btnAffiliationSubmit').trigger('click');
+        await flushPromises();
+
+        affiliation = await new AffiliationsApi().getAffiliation('', 12, '20172018');
+        expect(affiliation.data.board.president.sex).toBe(Sex.FEMALE);
         done();
     });
 });

@@ -1,121 +1,111 @@
 {
-  "affiliations": [
+  "affiliationsWithSeason": [
     {
       "id": "12_20162017",
       "clubId": 12,
-      "season": {
-        "description": "Saison 2016/2017",
-        "begin": "2016-09-01",
-        "end": "2017-08-31",
-        "id": "20162017"
-      },
-      "affiliation": {
-        "prefectureNumber": "qsdq",
-        "prefectureCity": "dq",
-        "siretNumber": "qdq",
-        "address": "dqs",
-        "postalCode": "dqsd",
-        "city": "qds",
-        "phoneNumber": "0600998877",
-        "email": "qsdsq@qsdqs.fr",
-        "webSite": "",
-        "board": {
-          "president": {
-            "name": "sdf",
-            "sex": "MALE"
-          },
-          "secretary": {
-            "name": "sdsdf",
-            "sex": "MALE"
-          },
-          "treasurer": {
-            "name": "sfd",
-            "sex": "MALE"
-          },
-          "membersNumber": 2,
-          "electedDate": "2019-05-06"
-        },
-        "status": "TO_COMPLETE",
-        "id": 3
-      }
+      "seasonId": 20162017,
+      "affiliationId": "1220162017"
     },
     {
       "id": "13_20162017",
       "clubId": 13,
-      "season": {
-        "description": "Saison 2016/2017",
-        "begin": "2016-09-01",
-        "end": "2017-08-31",
-        "id": "20162017"
-      },
-      "affiliation": {
-        "prefectureNumber": "qsdq",
-        "prefectureCity": "dq",
-        "siretNumber": "qdq",
-        "address": "dqs",
-        "postalCode": "dqsd",
-        "city": "qds",
-        "phoneNumber": "0600998877",
-        "email": "qsdsq@qsdqs.fr",
-        "webSite": "",
-        "board": {
-          "president": {
-            "name": "sdf",
-            "sex": "MALE"
-          },
-          "secretary": {
-            "name": "sdsdf",
-            "sex": "MALE"
-          },
-          "treasurer": {
-            "name": "sfd",
-            "sex": "MALE"
-          },
-          "membersNumber": 2,
-          "electedDate": "2019-05-06"
-        },
-        "status": "TO_COMPLETE",
-        "id": 3
-      }
+      "seasonId": 20162017,
+      "affiliationId": "1320162017"
     },
     {
       "id": "12_20172018",
       "clubId": 12,
-      "season": {
-        "description": "Saison 2017/2018",
-        "begin": "2017-09-01",
-        "end": "2018-08-31",
-        "id": "20172018"
-      },
-      "affiliation": {
-        "prefectureNumber": "qsdq",
-        "prefectureCity": "dq",
-        "siretNumber": "qdq",
-        "address": "dqs",
-        "postalCode": "dqsd",
-        "city": "qds",
-        "phoneNumber": "0600998877",
-        "email": "qsdsq@qsdqs.fr",
-        "webSite": "",
-        "board": {
-          "president": {
-            "name": "sdf",
-            "sex": "MALE"
-          },
-          "secretary": {
-            "name": "sdsdf",
-            "sex": "MALE"
-          },
-          "treasurer": {
-            "name": "sfd",
-            "sex": "MALE"
-          },
-          "membersNumber": 2,
-          "electedDate": "2019-05-06"
+      "seasonId": 20172018,
+      "affiliationId": "1220172018"
+    }
+  ],
+  "affiliations": [
+    {
+      "prefectureNumber": "qsdq",
+      "prefectureCity": "dq",
+      "siretNumber": "qdq",
+      "address": "dqs",
+      "postalCode": "dqsd",
+      "city": "qds",
+      "phoneNumber": "0600998877",
+      "email": "qsdsq@qsdqs.fr",
+      "webSite": "",
+      "board": {
+        "president": {
+          "name": "sdf",
+          "sex": "MALE"
         },
-        "status": "TO_COMPLETE",
-        "id": 3
-      }
+        "secretary": {
+          "name": "sdsdf",
+          "sex": "MALE"
+        },
+        "treasurer": {
+          "name": "sfd",
+          "sex": "MALE"
+        },
+        "membersNumber": 2,
+        "electedDate": "2019-05-06"
+      },
+      "status": "TO_COMPLETE",
+      "id": 1220162017
+    },
+    {
+      "prefectureNumber": "qsdq",
+      "prefectureCity": "dq",
+      "siretNumber": "qdq",
+      "address": "dqs",
+      "postalCode": "dqsd",
+      "city": "qds",
+      "phoneNumber": "0600998877",
+      "email": "qsdsq@qsdqs.fr",
+      "webSite": "",
+      "board": {
+        "president": {
+          "name": "sdf",
+          "sex": "MALE"
+        },
+        "secretary": {
+          "name": "sdsdf",
+          "sex": "MALE"
+        },
+        "treasurer": {
+          "name": "sfd",
+          "sex": "MALE"
+        },
+        "membersNumber": 2,
+        "electedDate": "2019-05-06"
+      },
+      "status": "TO_COMPLETE",
+      "id": 1320162017
+    },
+    {
+      "prefectureNumber": "qsdq",
+      "prefectureCity": "dq",
+      "siretNumber": "qdq",
+      "address": "dqs",
+      "postalCode": "dqsd",
+      "city": "qds",
+      "phoneNumber": "0600998877",
+      "email": "qsdsq@qsdqs.fr",
+      "webSite": "",
+      "board": {
+        "president": {
+          "name": "sdf",
+          "sex": "MALE"
+        },
+        "secretary": {
+          "name": "sdsdf",
+          "sex": "MALE"
+        },
+        "treasurer": {
+          "name": "sfd",
+          "sex": "MALE"
+        },
+        "membersNumber": 2,
+        "electedDate": "2019-05-06"
+      },
+      "status": "TO_COMPLETE",
+      "id": 1220172018
     }
   ],
   "clubs": [

@@ -15,7 +15,7 @@ import Clubs from '@/views/crud/Clubs.vue';
 describe('Clubs.vue', () => {
     let wrapper: any;
 
-    beforeEach((done) => {
+    beforeEach( async () => {
         initAxiosInterceptors(globalAxios);
         jest.setTimeout(30000);
         require('dotenv').config();
@@ -40,12 +40,12 @@ describe('Clubs.vue', () => {
             store,
         });
 
-        startjsonserver(() => undefined, done);
+        await startjsonserver();
     });
 
-    afterEach((done) => {
+    afterEach(async () => {
         wrapper.destroy();
-        stopjsonserver(done);
+        await stopjsonserver();
     });
 
     test('delete club', async (done) => {

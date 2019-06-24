@@ -76,9 +76,5 @@ export default class BoardVue extends Mixins(Utils, Validators) {
     get board() {
         return this.value;
     }
-
-    set board(board: Board) {
-        this.$emit('input', board);
-    }
 }
 </script>

@@ -5,7 +5,6 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import MultiEditor from '@/views/common/MultiEditor.vue';
 import {Printer} from '@/utils/printer';
-import {flushPromises} from '@/test/utils';
 
 describe('DateEditor.vue', () => {
     let wrapper: Wrapper<any>;
@@ -16,7 +15,7 @@ describe('DateEditor.vue', () => {
 
         wrapper = mount(Vue.extend({
             name: 'parent',
-            template: `<div data-app="true" id="app"><MultiEditor 
+            template: `<div data-app="true" id="app"><MultiEditor
                v-model="parent_value"
                :items="parent_items"
                :itemText="parent_itemText"
@@ -24,14 +23,14 @@ describe('DateEditor.vue', () => {
                :format="parent_format"
                :label="parent_label"
                /></div>`,
-        }),{
+        }), {
             sync: true,
             attachToDocument: true,
             props: ['parent_itemText', 'parent_chipText', 'parent_items', 'parent_format', 'parent_label'],
             data: () => {
                 return {
                     parent_value: [],
-                }
+                };
             },
             propsData: {
                 parent_itemText: new Printer((a: any) => a.name),

@@ -23,7 +23,7 @@ describe('App.vue', () => {
     let wrapper: any;
     let router: Router;
 
-    beforeEach((done) => {
+    beforeEach(async () => {
         initAxiosInterceptors(globalAxios);
 
 
@@ -39,12 +39,12 @@ describe('App.vue', () => {
             router,
             store,
         });
-        startjsonserver(() => undefined, done);
+        await startjsonserver();
     });
 
-    afterEach(async (done) => {
+    afterEach(async () => {
         wrapper.destroy();
-        stopjsonserver(done);
+        await stopjsonserver();
     });
 
     const login = async (loginValue: string) => {

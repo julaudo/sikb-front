@@ -28,7 +28,7 @@ describe('router.ts', () => {
     });
 
     let router: Router;
-    beforeEach(async (done) => {
+    beforeEach(async () => {
         initAxiosInterceptors(globalAxios);
         jest.setTimeout(30000);
         Vue.use(Vuetify);
@@ -47,19 +47,19 @@ describe('router.ts', () => {
             store,
         });
 
-        startjsonserver(() => undefined, done);
+        await startjsonserver();
     });
 
-    afterEach(async (done) => {
+    afterEach(async () => {
         wrapper.destroy();
-        stopjsonserver(done);
+        await stopjsonserver();
     });
     const check = (present: any[], absent: any[]) => {
         present.forEach((c: any) =>  expect(wrapper.find(c).exists()).toBeTruthy());
         absent.forEach((c: any) =>  expect(wrapper.find(c).exists()).toBeFalsy());
-    }
+    };
 
-    test('test routes', async (done) => {
+    test('test routes', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});
 
         check([], [Clubs, Persons, Users, Seasons]);
@@ -83,8 +83,6 @@ describe('router.ts', () => {
         await flushPromises();
 
         check([Users], [Clubs, Seasons, Persons]);
-
-        done();
     });
 
 });
