@@ -42,6 +42,7 @@
             <v-flex xs12 sm12 md12>
                 <DateEditor
                         v-model="board.electedDate"
+                        :rules="[required()]"
                         :label="$t('affiliation.board.electedDate')" />
             </v-flex>
 

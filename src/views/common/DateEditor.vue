@@ -22,6 +22,7 @@
             v-model="dateFormatted"
             @click:prepend="click"
             :label="label"
+            :rules="rules"
             prepend-icon="event">
     </v-text-field>
     </div>
@@ -36,6 +37,7 @@ import Validators from '@/utils/validators';
 export default class DateEditor extends Mixins(Utils, Validators) {
     @Prop() public value!: string;
     @Prop() public label!: string;
+    @Prop() public rules!: string;
 
     private menu = false;
     private dateFormatted = '';
