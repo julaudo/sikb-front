@@ -1,6 +1,6 @@
 <template>
 
-    <div class="kb-datatable" style="width:100%;">
+    <div class="kb-datatable" style="width:100%;overflow-y:scroll;">
         <v-card>
             <v-card-title>
                 <span class="headline">{{clubBackup.name + (modified ? ' *' : '')}}</span>
@@ -45,6 +45,10 @@
 
 
                         </v-flex>
+                        <v-flex xs12>
+                            <v-img contain :src="getLogoLocation()" max-height="25vh"/>
+                        </v-flex>
+
                     </v-layout>
                 </v-card-text>
                 <v-card-actions class="justify-center">
@@ -129,9 +133,9 @@ export default class ClubVue extends Mixins(Utils, Validators) {
                 this.$store.dispatch('UpdateClub', this.club).then(() => {
                     this.copy(this.club, this.clubBackup);
                     this.saving = false;
-                }).catch(() => {
-                    this.saving = false;
                 });
+            }).catch(() => {
+                this.saving = false;
             });
         }
     }
@@ -145,6 +149,14 @@ export default class ClubVue extends Mixins(Utils, Validators) {
         this.club!.logo = {
             location: file.name,
         };
+    }
+
+    private getLogoLocation(): string {
+        if (this.club!.logo!.location.startsWith('http')) {
+            return this.club!.logo!.location;
+        }
+
+        return URL.createObjectURL(this.file);
     }
 }
 </script>
