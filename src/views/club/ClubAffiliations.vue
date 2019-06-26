@@ -195,6 +195,7 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
 
     public async resize() {
         await this.$nextTick();
+        await this.$nextTick();
         if (this.$refs.tabs) {
             const tabsElement = this.getComponentRefElement(this.$refs.tabs);
             const tabItemElement = this.getComponentRefElement(this.$refs.tabItem);
@@ -286,6 +287,7 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
         };
         affiliation.affiliation.id = 0;
         affiliation.affiliation.board.electedDate = '';
+        affiliation.affiliation.status = AffiliationStatus.TOCOMPLETE;
         this.active = '' + affiliation.season.id;
 
         this.affiliations.push(affiliation);

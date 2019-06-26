@@ -257,7 +257,17 @@ export default class AffiliationVue extends Mixins(Utils, Validators, mixins<Ent
     }
 
     private canDelete(): boolean {
-        return this.features.includes(Functionality.AFFILIATIONDELETE);
+        if (!this.features.includes(Functionality.AFFILIATIONDELETE)) {
+            return false;
+        }
+        switch (this.entity.status) {
+            case AffiliationStatus.TOCOMPLETE:
+                return this.features.includes(Functionality.AFFILIATIONCREATE);
+            case AffiliationStatus.SUBMITTED:
+            case AffiliationStatus.VALIDATED:
+                return this.features.includes(Functionality.AFFILIATIONREJECT)
+                    || this.features.includes(Functionality.AFFILIATIONVALIDATE);
+        }
     }
 
     private canSubmit(): boolean {
