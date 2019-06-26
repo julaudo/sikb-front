@@ -97,6 +97,8 @@ describe('ClubVue.vue', () => {
     });
 
     test('test set logo', async () => {
+        window.URL.createObjectURL = jest.fn();
+
         await store.dispatch('Login', {login: 'loginOK', password: ''});
         await flushPromises();
         router.push({path: '/club/1/general'});

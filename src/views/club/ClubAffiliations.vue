@@ -3,7 +3,7 @@
     <div style="height:100%;width:100%;">
         <v-card style="height:100%" >
             <v-card-title ref="title">
-                <span class="headline">Affiliations</span>
+                <span class="headline">{{club ? club.name : ''}} - {{$t('route.affiliations')}}</span>
             </v-card-title>
             <div ref="btnAffiliate" height="100%">
                 <v-layout layout align-center justify-center column fill-height>
@@ -107,7 +107,7 @@
     }
 </style>
 <script lang="ts">
-import {AffiliationsApi, AffiliationStatus, Season, Sex} from '@/generated';
+import {AffiliationsApi, AffiliationStatus, Club, ClubsApi, Season, Sex} from '@/generated';
 import {Component, Mixins} from 'vue-property-decorator';
 import Utils from '@/utils/utils';
 import Validators from '@/utils/validators';
@@ -130,16 +130,22 @@ export default class ClubAffiliations extends Mixins(Utils, Validators) {
     @Getter public currentSeason!: Season;
     @Getter public seasons!: Map<string, Season>;
 
+
+    private club: Club | null = null;
     private active: any = null;
     private affiliations: SeasonWithAffiliation[] = [];
 
     public beforeRouteEnter(to: Route, from: Route, next: (vm: any) => void) {
         const clubId = +to.params.clubId;
 
+
         new AffiliationsApi(baseOptions).findAllClubAffiliations(store.getters.userToken, clubId)
             .then((response: AxiosResponse<SeasonWithAffiliation[]>) => {
                 next((vm: any) => {
                     vm.setAffiliations(response.data, to);
+                    new ClubsApi(baseOptions).getClubById(vm.$store.getters.userToken, clubId).then((c) => {
+                        vm.club = c.data;
+                    });
                 });
         });
     }

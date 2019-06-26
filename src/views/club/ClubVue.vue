@@ -152,11 +152,17 @@ export default class ClubVue extends Mixins(Utils, Validators) {
     }
 
     private getLogoLocation(): string {
-        if (this.club!.logo!.location.startsWith('http')) {
-            return this.club!.logo!.location;
+        if (this.file) {
+            return URL.createObjectURL(this.file);
         }
 
-        return URL.createObjectURL(this.file);
+        if(this.club!.logo && this.club!.logo!.location && this.club!.logo!.location.startsWith('http')) {
+            return this.club!.logo!.location;
+
+        }
+
+        return '';
+
     }
 }
 </script>

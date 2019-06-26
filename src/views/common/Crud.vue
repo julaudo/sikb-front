@@ -287,6 +287,9 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
                 this.deletingItem = item;
                 this.deleteDialog = true;
                 break;
+            default:
+                this.$emit(a, item);
+                break;
         }
     }
 
@@ -328,7 +331,6 @@ export default class Crud extends Mixins(Utils, FieldType, Validators) implement
         };
         if (this.editedItem.id) {
             this.$emit('updateItem', this.editedItem, callback);
-
         } else {
             this.$emit('createItem', this.editedItem, callback);
         }

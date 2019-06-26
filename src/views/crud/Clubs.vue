@@ -23,6 +23,7 @@ import {Mixins} from 'vue-property-decorator';
 import FieldType from '@/views/common/FieldType';
 import Validators from '@/utils/validators';
 import Crud from '@/views/common/Crud.vue';
+import {ObjectWithId} from '@/model/model';
 @Component({
     components: {Crud},
 })
@@ -83,8 +84,8 @@ export default class Clubs extends Mixins(CrudParent, FieldType, Validators) {
         return new ClubsApi(baseOptions).updateClub(this.userToken, item.id, item);
     }
 
-    public affiliations() {
-        alert('affiliations');
+    public affiliations(item: ObjectWithId) {
+        this.$router.push({path: '/club/' + item.id + '/affiliations'});
     }
 
 }
