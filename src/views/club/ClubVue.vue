@@ -129,6 +129,8 @@ export default class ClubVue extends Mixins(Utils, Validators) {
                 this.$store.dispatch('UpdateClub', this.club).then(() => {
                     this.copy(this.club, this.clubBackup);
                     this.saving = false;
+                }).catch(() => {
+                    this.saving = false;
                 });
             });
         }
