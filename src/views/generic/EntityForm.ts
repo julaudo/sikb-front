@@ -22,10 +22,6 @@ export default class EntityForm<T> extends Mixins(Utils) {
         this.copy(this.entityBackup, this.entity);
     }
 
-    protected isValidAndDirty() {
-        return this.valid && !this.equals(this.entity, this.entityBackup);
-    }
-
     protected isDirty() {
         return !this.equals(this.entity, this.entityBackup);
     }

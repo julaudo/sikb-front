@@ -13,6 +13,7 @@ module.exports = {
         '!**/*.d.ts',
         '!**/src/generated/**',
         '!**/src/test/**',
+        '!**/e2e/**',
     ],
     moduleDirectories: [
         'node_modules',

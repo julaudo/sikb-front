@@ -6,20 +6,27 @@ import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import store from '@/store/store';
 import globalAxios from 'axios';
-import {initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
-import {changed, decremented, incremented, testCreate, testDelete, testEdit} from '@/test/common';
+import {flushPromises, initAxiosInterceptors, setInputText, startjsonserver, stopjsonserver} from '@/test/utils';
+import {changed, decremented, getRows, incremented, testCreate, testDelete, testEdit} from '@/test/common';
 import {ClubsApi, Functionality} from '@/generated';
 import Clubs from '@/views/crud/Clubs.vue';
+import {ICrudParent} from '@/model/model';
+import Router from 'vue-router';
+import {createRouter} from '@/router';
 
 
 describe('Clubs.vue', () => {
     let wrapper: any;
+    let router: Router;
 
     beforeEach( async () => {
         initAxiosInterceptors(globalAxios);
         jest.setTimeout(30000);
         require('dotenv').config();
         Vue.use(Vuetify);
+        Vue.use(Router);
+
+        router = createRouter();
 
         store.state.userInfo = {
             login: '',
@@ -38,6 +45,7 @@ describe('Clubs.vue', () => {
             sync: false,
             i18n,
             store,
+            router,
         });
 
         await startjsonserver();
@@ -81,6 +89,25 @@ describe('Clubs.vue', () => {
         await testCreate(Clubs, wrapper, () => {
             wrapper.find('#refDialogSave').trigger('click');
         }, setData, incremented);
+
+        done();
+    });
+
+    test('goto affiliations', async (done) => {
+        await flushPromises();
+        const rows = getRows(wrapper);
+        const vm = wrapper.find(Clubs).vm as any as ICrudParent;
+        const columns = rows.at(0).findAll('td');
+
+        const nameIndex = vm.headers.findIndex((h: any) => h.value === 'name');
+        const clubName = columns.at(nameIndex).text();
+        const club = vm.items.find((c: any) => c.name === clubName);
+
+        const editIndex = vm.headers.findIndex((h: any) => h.value === 'affiliations');
+        columns.at(editIndex).find('i').trigger('click');
+        await flushPromises();
+
+        expect(router.currentRoute.fullPath).toEqual('/club/' + club!.id + '/affiliations');
 
         done();
     });

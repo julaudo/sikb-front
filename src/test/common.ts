@@ -67,6 +67,11 @@ export const testEdit = async (component: any, wrapper: Wrapper<any>, action: an
     const id = crud.editedItem.id;
 
     action();
+    const dialog = crud.dialog;
+    // escape while saving : no effect
+    wrapper.find('#refDialogCancel').trigger('keydown.esc');
+    expect(crud.dialog).toBe(dialog);
+
     await flushPromises();
     expect(crud.dialog).toBeFalsy();
 

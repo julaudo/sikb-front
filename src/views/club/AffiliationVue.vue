@@ -147,8 +147,6 @@ import {AffiliationStatus} from "../../generated";
                     {{$t("cancel")}}
                 </v-btn>
 
-
-
                 <v-btn id="btnAffiliationDelete"
                        v-if="canDelete() && !isCreation()"
                        flat color="primary"

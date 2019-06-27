@@ -6,7 +6,7 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import i18n from '@/i18n';
 import store from '@/store/store';
-import {AffiliationsApi, AffiliationStatus, Sex} from '@/generated';
+import {AffiliationsApi, AffiliationStatus, Functionality, Sex} from '@/generated';
 import Router from 'vue-router';
 import {
     flushPromises,
@@ -202,6 +202,20 @@ describe('ClubAffiliations.vue', () => {
         expect(vm.affiliations.length).toEqual(1);
     });
 
+    test('test delete forbidden', async () => {
+        await store.dispatch('Login', {login: 'loginOK', password: ''});
+
+        const index = store.state.userInfo!.functionalities.indexOf(Functionality.AFFILIATIONDELETE);
+        store.state.userInfo!.functionalities.splice(index, 1);
+
+        router.push('/club/12/affiliations');
+        await flushPromises();
+
+        expect(router.currentRoute.fullPath).toEqual('/club/12/affiliations/20172018');
+        const vm = wrapper.find(ClubAffiliations).vm;
+        expect(vm.affiliations.length).toEqual(2);
+        testButtons(null, true, null, null, null);
+    });
 
     test('test workflow', async () => {
         await store.dispatch('Login', {login: 'loginOK', password: ''});

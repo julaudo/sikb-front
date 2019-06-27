@@ -156,7 +156,7 @@ export default class ClubVue extends Mixins(Utils, Validators) {
             return URL.createObjectURL(this.file);
         }
 
-        if(this.club!.logo && this.club!.logo!.location && this.club!.logo!.location.startsWith('http')) {
+        if (this.club!.logo && this.club!.logo!.location && this.club!.logo!.location.startsWith('http')) {
             return this.club!.logo!.location;
 
         }

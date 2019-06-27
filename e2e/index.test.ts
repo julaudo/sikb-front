@@ -3,8 +3,8 @@ import 'jest-environment-puppeteer';
 
 describe('Login page', () => {
     beforeAll(async () => {
-        await page.goto('https://julaudo.github.io/sikb-front')
-    })
+        await page.goto('https://julaudo.github.io/sikb-front');
+    });
 
     it('should login sucessfully', async () => {
         await page.focus('#login');
@@ -15,10 +15,10 @@ describe('Login page', () => {
 
 
         await Promise.all([
-            page.click("#btnLogin"),
+            page.click('#btnLogin'),
             page.waitForNavigation({ waitUntil: 'networkidle0' }),
         ]);
 
         expect(page.url()).toBe('https://julaudo.github.io/sikb-front/#/home');
-    })
-})
+    });
+});
