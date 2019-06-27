@@ -1,5 +1,9 @@
 language: node_js
 node_js: stable
+cache:
+  npm: true
+  directories:
+    - ~/.cache
 script:
   - npm run build
   - npm run coveralls
