@@ -1,8 +1,11 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
-  publicPath: '/',
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/sikb-front/'
+    : '/',
   productionSourceMap: false,
+  outputDir: 'dist/sikb-front',
   pluginOptions: {
     i18n: {
       locale: 'fr',

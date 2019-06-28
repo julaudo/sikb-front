@@ -4,7 +4,7 @@
 set -e
 
 # navigate into the build output directory
-cd dist
+cd dist/sikb-front
 
 # if you are deploying to a custom domain
 # echo 'www.example.com' > CNAME
