@@ -1,3 +1,4 @@
+import {Club, SeasonWithAffiliation} from '@/generated';
 
 export interface ObjectWithId {
     id?: any;
@@ -14,4 +15,9 @@ export interface ICrud {
     editedItem: ObjectWithId;
     deletingItem: ObjectWithId;
     readonly visibleHeaders: any;
+}
+
+export interface ClubAffiliation {
+    club: Club;
+    affiliation: SeasonWithAffiliation;
 }

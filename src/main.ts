@@ -8,6 +8,9 @@ import Vuetify from 'vuetify/lib';
 import i18n from './i18n';
 import 'nprogress/nprogress.css';
 
+const splitPane = require('vue-splitpane').default;
+Vue.component('split-pane', splitPane);
+
 Vue.config.productionTip = false;
 
 Vue.use(Vuetify, {

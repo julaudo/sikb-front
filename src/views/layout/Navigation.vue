@@ -18,22 +18,21 @@
                 <template v-for="item in items">
                     <template v-if="item.children">
                         <v-list-group
-                                      :key="item.name"
-                                      :prepend-icon="item.meta.icon"
-                                      value="true">
+                                :value="active === item.path"
+                                :key="item.name"
+                                @input="group(item, $event)"
+                                :prepend-icon="item.meta.icon">
                             <template v-slot:activator :prepend-icon="item.meta.icon">
                                 <v-list-tile>
                                     <v-list-tile-content>
-                                        <v-list-tile-title>{{ getMenuName(item) }}</v-list-tile-title>
+                                        <v-list-tile-title>{{ getMenuName(item)}}</v-list-tile-title>
                                     </v-list-tile-content>
                                 </v-list-tile>
                             </template>
                             <v-list-tile
                                     v-for="child in getChildren(item)"
                                     :key="child.name"
-
                                     :to="item.path + '/' + child.path"
-                                    @click=""
                             >
                                 <v-list-tile-action>
                                     <v-icon>{{child.icon}}</v-icon>
@@ -84,8 +83,9 @@ import Component from 'vue-class-component';
 import * as router from '../../router';
 import {Getter} from 'vuex-class';
 import {Club} from '@/generated';
-import {ROUTE_CLUB} from '@/router';
+import {ROUTE_CLUB, subRoutes} from '@/router';
 import {RouteConfig} from 'vue-router';
+import {Watch} from 'vue-property-decorator';
 
 @Component
 export default class Navigation extends Vue {
@@ -93,6 +93,7 @@ export default class Navigation extends Vue {
     @Getter public features!: string[];
     @Getter public clubs!: Club[];
     private drawer = null;
+    private active = '';
 
     public getMenuName(item: RouteConfig): string {
         return item.meta.fullname || this.$t('route.' + item.name);
@@ -121,6 +122,14 @@ export default class Navigation extends Vue {
         return route.children ? route.children.filter((c: RouteConfig) => this.canAccess(c)) : [];
     }
 
+    private group(item: any, event: any) {
+        if (event) {
+            this.active = item.name;
+        } else {
+            this.active = '';
+        }
+    }
+
     get items() {
         const items: any[] = router.subRoutes.filter((route) => route.name !== ROUTE_CLUB && this.canAccess(route));
 
@@ -140,6 +149,16 @@ export default class Navigation extends Vue {
         });
 
         return items;
+    }
+
+    @Watch('$route', { immediate: true, deep: true })
+    private watchRoute(to: any, from: any) {
+        if (to.matched.length > 2) {
+            const parent = to.matched[1];
+            const route = subRoutes.filter((r) => r.name === parent.name)[0];
+            this.active = route.path;
+            Object.keys(to.params).forEach((param) => this.active = this.active.replace(':' + param, to.params[param]));
+        }
     }
 
     private logout() {

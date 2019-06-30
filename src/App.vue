@@ -59,6 +59,7 @@ import Axios from 'axios';
 import NProgress from 'nprogress';
 import {Route} from 'vue-router';
 import store from '@/store/store';
+import {decrementCount, incrementCount} from '@/router';
 
 
 @Component
@@ -79,15 +80,15 @@ export default class App extends Vue {
     const vm = this;
 
     this.requestInterceptor = Axios.interceptors.request.use((req) => {
-      this.incrementCount();
+      incrementCount();
       return req;
     });
 
     this.responseInterceptor = Axios.interceptors.response.use((response) => {
-      this.decrementCount();
+      decrementCount();
       return response;
     }, (error) => {
-      this.decrementCount();
+      decrementCount();
 
       vm.snackbarText = vm.$t('http.error.' + error.config.method).toString();
       vm.snackbar = false;
@@ -95,36 +96,7 @@ export default class App extends Vue {
       return Promise.reject(error);
     });
 
-    this.$router.beforeEach((to: Route, from: Route, next) => {
-      this.incrementCount();
-      // TODO check /club access
-      if (to.meta
-              && to.meta.features
-              && to.meta.features.filter((f: string) => store.getters.features.indexOf(f) !== -1).length === 0) {
-        next(false);
-        this.decrementCount();
-      } else {
-        next();
-        this.decrementCount();
-      }
-    });
-
   }
 
-  private incrementCount() {
-    if (this.count === 0) {
-        NProgress.start();
-    }
-    this.count++;
-  }
-
-  private decrementCount() {
-    this.$nextTick(() => {
-      this.count--;
-      if (this.count === 0) {
-        NProgress.done();
-      }
-    });
-  }
 }
 </script>

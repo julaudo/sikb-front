@@ -1,11 +1,14 @@
 import Vue from 'vue';
-import Router, {RouteConfig} from 'vue-router';
+import Router, {Route, RouteConfig} from 'vue-router';
 import SimpleView from '@/views/layout/SimpleView.vue';
 import {Functionality} from '@/generated';
+import store from '@/store/store';
+import NProgress from 'nprogress';
 
 Vue.use(Router);
 
 export const ROUTE_CLUB = 'club';
+export let requestCount = 0;
 
 export const adminRoutes = [
   {
@@ -42,6 +45,25 @@ export const adminRoutes = [
   },
 ];
 
+export const tasksRoutes = [
+  {
+    path: 'affiliations',
+    name: 'affiliationsValidation',
+    component: () => import( './views/tasks/AffiliationsToValidate.vue'),
+    meta: {
+      features: [Functionality.AFFILIATIONVALIDATE],
+    },
+    children: [{
+      path: ':id',
+      name: 'affiliationValidation',
+      component: () => import( './views/club/AffiliationVue.vue'),
+      meta: {
+        features: [Functionality.AFFILIATIONVALIDATE],
+      },
+    }],
+  },
+];
+
 export const subRoutes: RouteConfig[] = [
   {
     path: '/home',
@@ -58,6 +80,15 @@ export const subRoutes: RouteConfig[] = [
     children: adminRoutes,
     meta: {
       icon: 'verified_user',
+    },
+  },
+  {
+    path: '/tasks',
+    name: 'tasks',
+    component: SimpleView,
+    children: tasksRoutes,
+    meta: {
+      icon: 'fa-tasks',
     },
   },
   {
@@ -117,12 +148,47 @@ const routes = [
 ];
 
 
+export const incrementCount = () => {
+  if (requestCount === 0) {
+    NProgress.start();
+  }
+  requestCount++;
+};
+
+export const decrementCount = () => {
+  setTimeout(() => {
+    requestCount--;
+    if (requestCount === 0) {
+      NProgress.done();
+    }
+  });
+};
+
 export const createRouter = () => {
-  return new Router({
+  const r = new Router({
     mode: 'hash',
     base: process.env.BASE_URL,
     routes,
   });
+
+  r.beforeEach((to: Route, from: Route, next) => {
+    incrementCount();
+    // TODO check /club access
+    if (to.meta
+        && to.meta.features
+        && to.meta.features.filter((f: string) => store.getters.features.indexOf(f) !== -1).length === 0) {
+      next(false);
+      decrementCount();
+    } else {
+      next();
+    }
+  });
+
+  r.afterEach((to, from) => {
+    decrementCount();
+  });
+
+  return r;
 };
 
 const router = createRouter();

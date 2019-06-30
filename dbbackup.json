@@ -17,6 +17,12 @@
       "clubId": 12,
       "seasonId": 20172018,
       "affiliationId": "1220172018"
+    },
+    {
+      "id": "16_20172018",
+      "clubId": 16,
+      "seasonId": 20172018,
+      "affiliationId": "1620172018"
     }
   ],
   "affiliations": [
@@ -106,6 +112,35 @@
       },
       "status": "TO_COMPLETE",
       "id": 1220172018
+    },
+    {
+      "prefectureNumber": "qsdq",
+      "prefectureCity": "dq",
+      "siretNumber": "qdq",
+      "address": "dqs",
+      "postalCode": "dqsd",
+      "city": "qds",
+      "phoneNumber": "0600998877",
+      "email": "qsdsq@qsdqs.fr",
+      "webSite": "",
+      "board": {
+        "president": {
+          "name": "sdf",
+          "sex": "MALE"
+        },
+        "secretary": {
+          "name": "sdsdf",
+          "sex": "MALE"
+        },
+        "treasurer": {
+          "name": "sfd",
+          "sex": "MALE"
+        },
+        "membersNumber": 2,
+        "electedDate": "2019-05-06"
+      },
+      "status": "SUBMITTED",
+      "id": 1620172018
     }
   ],
   "clubs": [
